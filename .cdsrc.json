@@ -21,7 +21,7 @@
         "db": {
             "kind": "sqlite",
             "credentials": {
-                "database": "bookshop.db"
+                "database": "vacation.db"
             }
         }
     },

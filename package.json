@@ -4,12 +4,19 @@
     "description": "A simple self-contained bookshop service.",
     "dependencies": {
         "@sap/cds": "^5.1.5",
+        "@sap/xsenv": "^5.1.0",
+        "@sap/xssec": "^3.6.1",
+        "bcryptjs": "^2.4.3",
         "cds-routing-handlers": "^3.0.5",
+        "dotenv": "^16.4.5",
         "express": "^4.17.1",
+        "jsonwebtoken": "^9.0.2",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
+        "@types/bcryptjs": "^2.4.6",
         "@types/express": "^4.17.12",
+        "@types/sap__xsenv": "^3.3.2",
         "cds2types": "^2.6.1",
         "nodemon": "^2.0.7",
         "prettier": "^2.3.1",
@@ -19,9 +26,9 @@
     "scripts": {
         "start": "node ./srv/server.js",
         "dev": "npm run build:cds && nodemon",
-        "deploy": "cds deploy --to sqlite:bookshop.db",
+        "deploy": "cds deploy --to sqlite:vacation.db",
         "build": "npm run build:cds && npm run build:ts",
-        "build:cds": "echo 'Compiling cds sources...' && cds2types --cds ./srv/cat-service.cds --output ./src/entities.ts --prefix I -f && cds build && cp .cdsrc.json gen/srv",
+        "build:cds": "echo 'Compiling cds sources...' && cds2types --cds srv --output ./src/entities.ts --prefix I -f -d && cds build && cp .cdsrc.json gen/srv",
         "build:ts": "echo 'Compiling *.ts sources...' && tsc"
     }
 }

@@ -1,48 +1,3 @@
-export namespace cap.bookshop.typescript {
-    export interface IAuthor extends IManaged {
-        ID: number;
-        name: string;
-        dateOfBirth: Date;
-        dateOfDeath: Date;
-        placeOfBirth: string;
-        placeOfDeath: string;
-        books?: IBook[];
-    }
-
-    export interface IBook extends IManaged {
-        ID: number;
-        title: string;
-        descr: string;
-        author?: IAuthor;
-        author_ID?: number;
-        genre?: IGenre;
-        genre_ID?: number;
-        stock: number;
-        price: number;
-        currency: sap.common.ICurrencies;
-        currency_code?: string;
-    }
-
-    export interface IGenre extends sap.common.ICodeList {
-        ID: number;
-        parent?: IGenre;
-        parent_ID?: number;
-        children: IGenre[];
-    }
-
-    export enum Entity {
-        Author = "cap.bookshop.typescript.Author",
-        Book = "cap.bookshop.typescript.Book",
-        Genre = "cap.bookshop.typescript.Genre",
-    }
-
-    export enum SanitizedEntity {
-        Author = "Author",
-        Book = "Book",
-        Genre = "Genre",
-    }
-}
-
 export namespace sap.common {
     export interface ICodeList {
         name: string;
@@ -77,59 +32,200 @@ export namespace sap.common {
     }
 }
 
-export namespace CatalogService {
-    export interface IBook {
-        createdAt?: Date;
-        modifiedAt?: Date;
-        ID: number;
-        title: string;
-        descr: string;
-        author: string;
-        genre?: IGenre;
-        genre_ID?: number;
-        stock: number;
-        price: number;
-        currency: ICurrencies;
-        currency_code?: string;
+export namespace vacation {
+    export enum Role {
+        staff,
+        manager,
     }
 
-    export interface ICurrencies {
-        name: string;
-        descr: string;
-        code: string;
-        symbol: string;
+    export enum Status {
+        pending,
+        accepted,
+        rejected,
     }
 
-    export interface IGenre {
-        name: string;
-        descr: string;
-        ID: number;
-        parent?: IGenre;
-        parent_ID?: number;
-        children: IGenre[];
+    export interface ICalendar extends ICuid, IManaged {
+        startDay: Date;
+        endDay: Date;
+        holidayName: string;
     }
 
-    export enum ActionSubmitOrder {
-        name = "submitOrder",
-        paramBook = "book",
-        paramAmount = "amount",
+    export interface IDepartments extends IManaged {
+        id: number;
+        departmentName: string;
+        isHRDepartment?: boolean;
+        members?: IUsers[];
+        isActive?: boolean;
     }
 
-    export interface IActionSubmitOrderParams {
-        book: number;
-        amount: number;
+    export interface INotifications extends ICuid, IManaged {
+        sender?: IUsers;
+        sender_ID?: string;
+        receiver?: IUsers;
+        receiver_ID?: string;
+        message: string;
+        isRead?: boolean;
+        request?: IRequests;
+        request_ID?: string;
+    }
+
+    export interface IRequests extends ICuid, IManaged {
+        status?: Status;
+        reason: string;
+        user?: IUsers;
+        user_ID?: string;
+        startDay: Date;
+        endDay: Date;
+        isOutOfDay?: boolean;
+        comment?: string;
+        notification?: INotifications;
+    }
+
+    export interface IUsers extends ICuid, IManaged {
+        username: string;
+        password: string;
+        fullName: string;
+        isActive?: boolean;
+        address: string;
+        role?: Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: IRequests[];
+        department?: IDepartments;
+        department_id?: number;
     }
 
     export enum Entity {
-        Book = "CatalogService.Book",
-        Currencies = "CatalogService.Currencies",
-        Genre = "CatalogService.Genre",
+        Calendar = "vacation.Calendar",
+        Departments = "vacation.Departments",
+        Notifications = "vacation.Notifications",
+        Requests = "vacation.Requests",
+        Users = "vacation.Users",
     }
 
     export enum SanitizedEntity {
-        Book = "Book",
-        Currencies = "Currencies",
-        Genre = "Genre",
+        Calendar = "Calendar",
+        Departments = "Departments",
+        Notifications = "Notifications",
+        Requests = "Requests",
+        Users = "Users",
+    }
+}
+
+export namespace AuthService {
+    export interface IUsers {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        username: string;
+        password: string;
+        fullName: string;
+        isActive?: boolean;
+        address: string;
+        role?: vacation.Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: vacation.IRequests[];
+        department?: vacation.IDepartments;
+        department_id?: number;
+    }
+
+    export enum ActionLogin {
+        name = "login",
+        paramUsername = "username",
+        paramPassword = "password",
+    }
+
+    export interface IActionLoginParams {
+        username: string;
+        password: string;
+    }
+
+    export type ActionLoginReturn = string;
+
+    export enum FuncLogout {
+        name = "logout",
+    }
+
+    export type FuncLogoutReturn = string;
+
+    export enum FuncRefresh {
+        name = "refresh",
+    }
+
+    export type FuncRefreshReturn = string;
+
+    export enum Entity {
+        Users = "AuthService.Users",
+    }
+
+    export enum SanitizedEntity {
+        Users = "Users",
+    }
+}
+
+export namespace ManagerService {
+    export interface ICalendar {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        startDay: Date;
+        endDay: Date;
+        holidayName: string;
+    }
+
+    export enum Entity {
+        Calendar = "ManagerService.Calendar",
+    }
+
+    export enum SanitizedEntity {
+        Calendar = "Calendar",
+    }
+}
+
+export namespace RequestService {
+    export interface ICalendar {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        startDay: Date;
+        endDay: Date;
+        holidayName: string;
+    }
+
+    export interface IRequests {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        status?: vacation.Status;
+        reason: string;
+        user?: vacation.IUsers;
+        user_ID?: string;
+        startDay: Date;
+        endDay: Date;
+        isOutOfDay?: boolean;
+        comment?: string;
+        notification?: vacation.INotifications;
+    }
+
+    export enum Entity {
+        Calendar = "RequestService.Calendar",
+        Requests = "RequestService.Requests",
+    }
+
+    export enum SanitizedEntity {
+        Calendar = "Calendar",
+        Requests = "Requests",
     }
 }
 
