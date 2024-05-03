@@ -1,10 +1,10 @@
 import { Handler, Req, BeforeCreate, AfterCreate } from "cds-routing-handlers";
-import { AuthService } from "../entities";
+import { PublicService } from "../entities";
 import * as bcrypt from "bcryptjs";
-import { calculateVacationDays } from "../helpers/leaveDayCaculation";
+import { calculateVacationDays } from "../helpers/leaveDayCalculation";
 
-@Handler(AuthService.SanitizedEntity.Users)
-export class UserHandler {
+@Handler(PublicService.SanitizedEntity.Users)
+export class PublicHandler {
     @BeforeCreate()
     public async hashPassword(@Req() req: any): Promise<void> {
         const { data } = req;

@@ -114,6 +114,100 @@ export namespace vacation {
 }
 
 export namespace AuthService {
+    export enum FuncLogout {
+        name = "logout",
+    }
+
+    export type FuncLogoutReturn = string;
+
+    export enum FuncRefresh {
+        name = "refresh",
+    }
+
+    export type FuncRefreshReturn = string;
+
+    export enum Entity {}
+
+    export enum SanitizedEntity {}
+}
+
+export namespace ManagerService {
+    export interface ICalendar {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        startDay: Date;
+        endDay: Date;
+        holidayName: string;
+    }
+
+    export interface IDepartments {
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        id: number;
+        departmentName: string;
+        isHRDepartment?: boolean;
+        members?: IUsers[];
+        isActive?: boolean;
+    }
+
+    export interface IRequestsManage {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        status?: vacation.Status;
+        reason: string;
+        user?: IUsers;
+        user_ID?: string;
+        startDay: Date;
+        endDay: Date;
+        isOutOfDay?: boolean;
+        comment?: string;
+        notification?: vacation.INotifications;
+    }
+
+    export interface IUsers {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        username: string;
+        password: string;
+        fullName: string;
+        isActive?: boolean;
+        address: string;
+        role?: vacation.Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: IRequestsManage[];
+        department?: IDepartments;
+        department_id?: number;
+    }
+
+    export enum Entity {
+        Calendar = "ManagerService.Calendar",
+        Departments = "ManagerService.Departments",
+        RequestsManage = "ManagerService.RequestsManage",
+        Users = "ManagerService.Users",
+    }
+
+    export enum SanitizedEntity {
+        Calendar = "Calendar",
+        Departments = "Departments",
+        RequestsManage = "RequestsManage",
+        Users = "Users",
+    }
+}
+
+export namespace PublicService {
     export interface IUsers {
         ID: string;
         createdAt?: Date;
@@ -147,45 +241,12 @@ export namespace AuthService {
 
     export type ActionLoginReturn = string;
 
-    export enum FuncLogout {
-        name = "logout",
-    }
-
-    export type FuncLogoutReturn = string;
-
-    export enum FuncRefresh {
-        name = "refresh",
-    }
-
-    export type FuncRefreshReturn = string;
-
     export enum Entity {
-        Users = "AuthService.Users",
+        Users = "PublicService.Users",
     }
 
     export enum SanitizedEntity {
         Users = "Users",
-    }
-}
-
-export namespace ManagerService {
-    export interface ICalendar {
-        ID: string;
-        createdAt?: Date;
-        createdBy?: string;
-        modifiedAt?: Date;
-        modifiedBy?: string;
-        startDay: Date;
-        endDay: Date;
-        holidayName: string;
-    }
-
-    export enum Entity {
-        Calendar = "ManagerService.Calendar",
-    }
-
-    export enum SanitizedEntity {
-        Calendar = "Calendar",
     }
 }
 

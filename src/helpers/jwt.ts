@@ -1,13 +1,13 @@
 import * as jwt from "jsonwebtoken";
 import * as env from "dotenv";
-import { AuthService } from "../entities";
+import { AuthService, PublicService } from "../entities";
 import { DecodedResponse } from "../types/types";
 
 env.configDotenv();
 const accessTokenKey = process.env.ACCESS_TOKEN;
 const refreshTokenKey = process.env.REFRESH_TOKEN;
 
-const generateAccessToken = (user: AuthService.IUsers) => {
+const generateAccessToken = (user: PublicService.IUsers) => {
     return jwt.sign(
         {
             id: user.ID,
@@ -18,7 +18,7 @@ const generateAccessToken = (user: AuthService.IUsers) => {
     );
 };
 
-const generateRefreshToken = (user: AuthService.IUsers) => {
+const generateRefreshToken = (user: PublicService.IUsers) => {
     return jwt.sign(
         {
             id: user.ID,
