@@ -12,6 +12,6 @@
         "preserveConstEnums": true,
         "skipLibCheck": true
     },
-    "include": ["src", "src/middlewares/userChecker.ts"],
+    "include": ["src"],
     "exclude": ["node_modules"]
 }

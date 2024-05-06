@@ -6,9 +6,9 @@ import cds from "@sap/cds";
 import { generateAccessToken, generateRefreshToken } from "../helpers/jwt";
 
 @Handler()
-export class PublicHandler {
+export class PublicAction {
     @Action(PublicService.ActionLogin.name)
-    public async loginHandler(
+    public async loginAction(
         @Param(PublicService.ActionLogin.paramUsername) username: string,
         @Param(PublicService.ActionLogin.paramPassword) password: string,
         @Req() req: Request
@@ -39,8 +39,7 @@ export class PublicHandler {
     // @Func(PublicService.FuncRefresh.name)
     // public async refreshHandler(@Req() req: Request): Promise<any> {
     //     const decodedAccessToken = verifyAccessToken(req.headers.authorization);
-    // if (decodedAccessToken.exp)
-    //   return req.rejest(400, "This access token is useable", "");
+    
 
     // const user = await SELECT.one
     //   .from(Users)

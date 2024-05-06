@@ -3,6 +3,7 @@ import { ManagerService } from "../../entities";
 import { HandleMiddleware } from "../../middlewares/handler.middleware";
 import { DataCustom } from "../../types/types";
 import { getAllDaysBetween, getDaysBeforeAfterApril, removeHolidays } from "../../helpers/leaveDayCalculation";
+import { notify } from "../../helpers/notification";
 
 @Handler(ManagerService.SanitizedEntity.RequestsManage)
 @Use(HandleMiddleware)
@@ -18,15 +19,14 @@ export class RequestManageService {
                     col.endDay,
                     col.status,
                     col.isOutOfDay,
-                    col.user((user : ManagerService.IUsers) => {
+                    col.user((user: ManagerService.IUsers) => {
                         user.ID, user.department_id, user.fullName, user.username;
                     });
             })
             .where(req.params.length > 0 ? { ID: req.params[0] } : "");
 
         const data = requests.filter(request => request.user.department_id === authentication.department);
-
-        req.results = data;
+        req.reply({ code: 200, data: data });
     }
 
     @BeforeUpdate()
@@ -52,6 +52,7 @@ export class RequestManageService {
 
     @AfterUpdate()
     public async removeTotalDayOff(@Req() req: DataCustom) {
+        const { authentication } = req;
         const request = await cds.ql.SELECT.one.from("Requests").where({ ID: req.params[0] });
         const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.dataTransaction.id });
 
@@ -116,12 +117,11 @@ export class RequestManageService {
                         .where({ ID: user.ID });
             }
         }
-
-        return req.results = {
+        const response = await cds.ql.SELECT.one.from("Requests").where({ ID: req.params[0] });
+        await notify({ response, authentication }, response.status);
+        return req.reply({
             code: 200,
-            message: "Update successfully",
-        };
-
-        
+            message: "Updated successfully",
+        });
     }
 }

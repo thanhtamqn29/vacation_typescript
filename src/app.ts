@@ -8,8 +8,7 @@ import { getPath } from "./types/types";
 
 export const application = async () => {
     const app = express();
-
-    await cds.connect("db");
+    await cds.connect.to("db");
     await cds
         .serve("all")
         .in(app)

@@ -262,6 +262,22 @@ export namespace RequestService {
         holidayName: string;
     }
 
+    export interface INotifications {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        sender?: vacation.IUsers;
+        sender_ID?: string;
+        receiver?: vacation.IUsers;
+        receiver_ID?: string;
+        message: string;
+        isRead?: boolean;
+        request?: IRequests;
+        request_ID?: string;
+    }
+
     export interface IRequests {
         ID: string;
         createdAt?: Date;
@@ -276,16 +292,18 @@ export namespace RequestService {
         endDay: Date;
         isOutOfDay?: boolean;
         comment?: string;
-        notification?: vacation.INotifications;
+        notification?: INotifications;
     }
 
     export enum Entity {
         Calendar = "RequestService.Calendar",
+        Notifications = "RequestService.Notifications",
         Requests = "RequestService.Requests",
     }
 
     export enum SanitizedEntity {
         Calendar = "Calendar",
+        Notifications = "Notifications",
         Requests = "Requests",
     }
 }

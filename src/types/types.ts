@@ -13,11 +13,7 @@ export interface DataCustom extends HeaderCustom {
         department: number;
     };
     baseUrl: string;
-    results: {
-        code: number;
-        message: string;
-        data?: object[];
-    };
+
     dataTransaction?: { id: string };
 }
 
