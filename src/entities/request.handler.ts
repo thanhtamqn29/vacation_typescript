@@ -1,16 +1,15 @@
 import { Handler, Req, BeforeCreate, OnRead, Use, AfterCreate, BeforeUpdate, AfterDelete, OnCreate, AfterUpdate } from "cds-routing-handlers";
 import { RequestService } from "../entities";
-import { DataCustom } from "../types/types";
 import { HandleMiddleware } from "../middlewares/handler.middleware";
 import { getAllDaysBetween } from "../helpers/leaveDayCalculation";
-import * as emitter from "events";
 import { notify } from "../helpers/notification";
+import cds from "@sap/cds";
 @Handler(RequestService.SanitizedEntity.Requests)
 @Use(HandleMiddleware)
 export class RequestServiceHandler {
     @BeforeCreate()
     @BeforeUpdate()
-    public async createRequest(@Req() req: DataCustom): Promise<any> {
+    public async validDateTime(@Req() req: any): Promise<any> {
         const startDay = new Date(req.data.startDay);
         const endDay = new Date(req.data.endDay);
         const currentDate = new Date();
@@ -23,7 +22,7 @@ export class RequestServiceHandler {
     }
 
     @OnRead()
-    public async getOwnRequest(@Req() req: DataCustom): Promise<any> {
+    public async getOwnRequest(@Req() req: any): Promise<any> {
         const { authentication } = req;
 
         if (req.params.length > 0) {
@@ -37,7 +36,7 @@ export class RequestServiceHandler {
     }
 
     @AfterCreate()
-    public async updateRequest(@Req() req: DataCustom) {
+    public async updateRequest(@Req() req: any) {
         const { data, authentication } = req;
 
         const user = await cds.ql.SELECT.one.from("Users").where({ ID: authentication.id });
@@ -61,14 +60,14 @@ export class RequestServiceHandler {
     }
 
     @AfterDelete()
-    public async deleteRequest(@Req() req: DataCustom) {
+    public async deleteRequest(@Req() req: any) {
         const { data, authentication } = req;
         if (data || data?.length > 0) req.reply({ code: 200, message: "Canceled successfully" });
         await notify({ data: data, authentication }, "delete");
     }
 
     @AfterUpdate()
-    public async sendingNotify(@Req() req: DataCustom) {
+    public async sendingNotify(@Req() req: any) {
         const { data, authentication } = req;
         await notify({ data: data, authentication }, "update");
     }

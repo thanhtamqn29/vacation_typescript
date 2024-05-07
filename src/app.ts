@@ -4,7 +4,6 @@ import { createCombinedHandler } from "cds-routing-handlers";
 import cds from "@sap/cds";
 
 import { HandleMiddleware } from "./middlewares/handler.middleware";
-import { getPath } from "./types/types";
 
 export const application = async () => {
     const app = express();
@@ -12,7 +11,7 @@ export const application = async () => {
     await cds
         .serve("all")
         .in(app)
-        .with((srv: getPath) => {
+        .with((srv: any) => {
             if (srv.path === "/public") {
                 const hdl = createCombinedHandler({
                     handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],

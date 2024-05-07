@@ -1,22 +1,17 @@
-import { ICdsMiddleware, Req, Jwt, Middleware, Next } from "cds-routing-handlers";
+import { ICdsMiddleware, Req, Jwt, Middleware } from "cds-routing-handlers";
 import { verifyAccessToken } from "../helpers/jwt";
-import { DataCustom } from "../types/types";
-import { OnEventHandler } from "@sap/cds/apis/services";
 
 @Middleware()
 export class HandleMiddleware implements ICdsMiddleware {
-    public async use(@Req() req: DataCustom, @Jwt() jwt: string, @Next() next: OnEventHandler): Promise<any> {
-        const decoded = verifyAccessToken(jwt);
+    public async use(@Req() req: any, @Jwt() jwt: string): Promise<any> {
+        const decoded: any = verifyAccessToken(jwt);
 
         if (!decoded) {
             return req.error(400, "Couldn't find your token!", "");
         }
+        if (!decoded.exp) return req.error(403, "Your token is expired");
 
-        if (!decoded.exp) {
-            return req.error(401, "Your token is expired!", "");
-        }
-
-        const users = await cds.read("Users").where({ ID: decoded.id });
+        const users = await cds.ql.SELECT("Users").where({ ID: decoded.id });
 
         if (!users || users.length === 0) {
             return req.error(404, "User not found!", "");
@@ -34,22 +29,23 @@ export class HandleMiddleware implements ICdsMiddleware {
             role: decoded.role,
             department: user.department_id,
         };
-        const service = req.path.split(".")
-        
-        if (service[0] === "ManagerService") {
+
+        const service = req.req.originalUrl ? req.req.originalUrl.split("/") : null;
+
+        if (service && service[1] === "manage") {
             this.checkRoleForManagePath(req, service);
         }
     }
 
-    private checkRoleForManagePath = async (req: DataCustom, service : Array<String>) => {
+    private checkRoleForManagePath = async (req: any, service: Array<String>) => {
         if (req.authentication.role !== "manager") {
             return req.error(402, "You're not the manager", "");
         }
 
-        if (service[1] === "Departments" && req.method === "POST") {
-            const user = await cds.ql.SELECT.one.from("Users").where({ID : req.authentication.id})
+        if (service[2] === "Departments" && req.method === "POST") {
+            const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.authentication.id });
             if (user.department_id) {
-                 return req.error(402, "You're already in a department!", "");
+                return req.error(402, "You're already in a department!", "");
             }
         }
     };

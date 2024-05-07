@@ -1,7 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import * as env from "dotenv";
 import { AuthService, PublicService } from "../entities";
-import { DecodedResponse } from "../types/types";
 
 env.configDotenv();
 const accessTokenKey = process.env.ACCESS_TOKEN;
@@ -31,15 +30,12 @@ const generateRefreshToken = (user: PublicService.IUsers) => {
 
 const verifyAccessToken = (token: string) => {
     if (!token) return;
-
-
-
     try {
         const decoded = jwt.verify(token, accessTokenKey);
         return decoded;
     } catch (err) {
-        const decoded : string | jwt.JwtPayload = jwt.decode(token);
-        return  decoded ? (decoded as jwt.JwtPayload).id : null;
+        const decoded: any = jwt.decode(token);
+        return decoded ? { id: decoded.id } : null;
     }
 };
 const verifyRefreshToken = (token: string) => {
@@ -48,8 +44,8 @@ const verifyRefreshToken = (token: string) => {
         const decoded = jwt.verify(token, refreshTokenKey);
         return decoded;
     } catch (err) {
-        const decoded = jwt.decode(token);
-        return decoded;
+        const decoded: any = jwt.decode(token);
+        return decoded ? { id: decoded.id } : null;
     }
 };
 

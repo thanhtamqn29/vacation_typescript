@@ -1,37 +1,3 @@
-export namespace sap.common {
-    export interface ICodeList {
-        name: string;
-        descr: string;
-    }
-
-    export interface ICountries extends sap.common.ICodeList {
-        code: string;
-    }
-
-    export interface ICurrencies extends sap.common.ICodeList {
-        code: string;
-        symbol: string;
-    }
-
-    export interface ILanguages extends sap.common.ICodeList {
-        code: string;
-    }
-
-    export enum Entity {
-        CodeList = "sap.common.CodeList",
-        Countries = "sap.common.Countries",
-        Currencies = "sap.common.Currencies",
-        Languages = "sap.common.Languages",
-    }
-
-    export enum SanitizedEntity {
-        CodeList = "CodeList",
-        Countries = "Countries",
-        Currencies = "Currencies",
-        Languages = "Languages",
-    }
-}
-
 export namespace vacation {
     export enum Role {
         staff,
@@ -44,44 +10,12 @@ export namespace vacation {
         rejected,
     }
 
-    export interface ICalendar extends ICuid, IManaged {
-        startDay: Date;
-        endDay: Date;
-        holidayName: string;
-    }
-
-    export interface IDepartments extends IManaged {
-        id: number;
-        departmentName: string;
-        isHRDepartment?: boolean;
-        members?: IUsers[];
-        isActive?: boolean;
-    }
-
-    export interface INotifications extends ICuid, IManaged {
-        sender?: IUsers;
-        sender_ID?: string;
-        receiver?: IUsers;
-        receiver_ID?: string;
-        message: string;
-        isRead?: boolean;
-        request?: IRequests;
-        request_ID?: string;
-    }
-
-    export interface IRequests extends ICuid, IManaged {
-        status?: Status;
-        reason: string;
-        user?: IUsers;
-        user_ID?: string;
-        startDay: Date;
-        endDay: Date;
-        isOutOfDay?: boolean;
-        comment?: string;
-        notification?: INotifications;
-    }
-
-    export interface IUsers extends ICuid, IManaged {
+    export interface IUsers {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
         username: string;
         password: string;
         fullName: string;
@@ -96,29 +30,161 @@ export namespace vacation {
         department_id?: number;
     }
 
+    export interface IRequests {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        status?: Status;
+        reason: string;
+        user?: IUsers;
+        user_ID?: string;
+        startDay: Date;
+        endDay: Date;
+        isOutOfDay?: boolean;
+        comment?: string;
+        notification?: INotifications;
+    }
+
+    export interface INotifications {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        sender?: IUsers;
+        sender_ID?: string;
+        receiver?: IUsers;
+        receiver_ID?: string;
+        message: string;
+        isRead?: boolean;
+        request?: IRequests;
+        request_ID?: string;
+    }
+
+    export interface IDepartments {
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        id: number;
+        departmentName: string;
+        isHRDepartment?: boolean;
+        members?: IUsers[];
+        isActive?: boolean;
+    }
+
+    export interface ICalendar {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        startDay: Date;
+        endDay: Date;
+        holidayName: string;
+    }
+
     export enum Entity {
-        Calendar = "vacation.Calendar",
-        Departments = "vacation.Departments",
-        Notifications = "vacation.Notifications",
-        Requests = "vacation.Requests",
         Users = "vacation.Users",
+        Requests = "vacation.Requests",
+        Notifications = "vacation.Notifications",
+        Departments = "vacation.Departments",
+        Calendar = "vacation.Calendar",
     }
 
     export enum SanitizedEntity {
-        Calendar = "Calendar",
-        Departments = "Departments",
-        Notifications = "Notifications",
-        Requests = "Requests",
         Users = "Users",
+        Requests = "Requests",
+        Notifications = "Notifications",
+        Departments = "Departments",
+        Calendar = "Calendar",
+    }
+}
+
+export namespace sap.common {
+    export interface ILanguages {
+        name: string;
+        descr: string;
+        code: string;
+        texts: ITexts[];
+        localized?: ITexts;
+    }
+
+    export interface ICountries {
+        name: string;
+        descr: string;
+        code: string;
+        texts: ITexts[];
+        localized?: ITexts;
+    }
+
+    export interface ICurrencies {
+        name: string;
+        descr: string;
+        code: string;
+        symbol: string;
+        texts: ITexts[];
+        localized?: ITexts;
+    }
+
+    export interface ITexts {
+        locale: string;
+        name: string;
+        descr: string;
+        code: string;
+    }
+
+    export interface ITexts {
+        locale: string;
+        name: string;
+        descr: string;
+        code: string;
+    }
+
+    export interface ITexts {
+        locale: string;
+        name: string;
+        descr: string;
+        code: string;
+    }
+
+    export enum Entity {
+        Languages = "sap.common.Languages",
+        Countries = "sap.common.Countries",
+        Currencies = "sap.common.Currencies",
+        Texts = "sap.common.Currencies.texts",
+    }
+
+    export enum SanitizedEntity {
+        Languages = "Languages",
+        Countries = "Countries",
+        Currencies = "Currencies",
+        Texts = "Texts",
     }
 }
 
 export namespace AuthService {
-    export enum FuncLogout {
-        name = "logout",
+    export interface IUsers {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        username: string;
+        password: string;
+        fullName: string;
+        isActive?: boolean;
+        address: string;
+        role?: vacation.Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: vacation.IRequests[];
+        department?: vacation.IDepartments;
+        department_id?: number;
     }
-
-    export type FuncLogoutReturn = string;
 
     export enum FuncRefresh {
         name = "refresh",
@@ -126,12 +192,42 @@ export namespace AuthService {
 
     export type FuncRefreshReturn = string;
 
-    export enum Entity {}
+    export enum FuncLogout {
+        name = "logout",
+    }
 
-    export enum SanitizedEntity {}
+    export type FuncLogoutReturn = string;
+
+    export enum Entity {
+        Users = "AuthService.Users",
+    }
+
+    export enum SanitizedEntity {
+        Users = "Users",
+    }
 }
 
 export namespace ManagerService {
+    export interface IUsers {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        username: string;
+        password: string;
+        fullName: string;
+        isActive?: boolean;
+        address: string;
+        role?: vacation.Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: IRequestsManage[];
+        department?: IDepartments;
+        department_id?: number;
+    }
+
     export interface ICalendar {
         ID: string;
         createdAt?: Date;
@@ -172,38 +268,29 @@ export namespace ManagerService {
         notification?: vacation.INotifications;
     }
 
-    export interface IUsers {
-        ID: string;
-        createdAt?: Date;
-        createdBy?: string;
-        modifiedAt?: Date;
-        modifiedBy?: string;
-        username: string;
-        password: string;
-        fullName: string;
-        isActive?: boolean;
-        address: string;
-        role?: vacation.Role;
-        refreshToken: string;
-        dayOffThisYear?: number;
-        dayOffLastYear?: number;
-        requests?: IRequestsManage[];
-        department?: IDepartments;
-        department_id?: number;
+    export enum ActionInvite {
+        name = "invite",
+        paramIds = "ids",
     }
 
+    export interface IActionInviteParams {
+        ids: string[];
+    }
+
+    export type ActionInviteReturn = string;
+
     export enum Entity {
+        Users = "ManagerService.Users",
         Calendar = "ManagerService.Calendar",
         Departments = "ManagerService.Departments",
         RequestsManage = "ManagerService.RequestsManage",
-        Users = "ManagerService.Users",
     }
 
     export enum SanitizedEntity {
+        Users = "Users",
         Calendar = "Calendar",
         Departments = "Departments",
         RequestsManage = "RequestsManage",
-        Users = "Users",
     }
 }
 
@@ -262,22 +349,6 @@ export namespace RequestService {
         holidayName: string;
     }
 
-    export interface INotifications {
-        ID: string;
-        createdAt?: Date;
-        createdBy?: string;
-        modifiedAt?: Date;
-        modifiedBy?: string;
-        sender?: vacation.IUsers;
-        sender_ID?: string;
-        receiver?: vacation.IUsers;
-        receiver_ID?: string;
-        message: string;
-        isRead?: boolean;
-        request?: IRequests;
-        request_ID?: string;
-    }
-
     export interface IRequests {
         ID: string;
         createdAt?: Date;
@@ -295,45 +366,37 @@ export namespace RequestService {
         notification?: INotifications;
     }
 
+    export interface INotifications {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        sender?: vacation.IUsers;
+        sender_ID?: string;
+        receiver?: vacation.IUsers;
+        receiver_ID?: string;
+        message: string;
+        isRead?: boolean;
+        request?: IRequests;
+        request_ID?: string;
+    }
+
     export enum Entity {
         Calendar = "RequestService.Calendar",
-        Notifications = "RequestService.Notifications",
         Requests = "RequestService.Requests",
+        Notifications = "RequestService.Notifications",
     }
 
     export enum SanitizedEntity {
         Calendar = "Calendar",
-        Notifications = "Notifications",
         Requests = "Requests",
+        Notifications = "Notifications",
     }
 }
 
 export type User = string;
 
-export interface ICuid {
-    ID: string;
-}
+export enum Entity {}
 
-export interface IManaged {
-    createdAt?: Date;
-    createdBy?: string;
-    modifiedAt?: Date;
-    modifiedBy?: string;
-}
-
-export interface ITemporal {
-    validFrom: Date;
-    validTo: Date;
-}
-
-export enum Entity {
-    Cuid = "cuid",
-    Managed = "managed",
-    Temporal = "temporal",
-}
-
-export enum SanitizedEntity {
-    Cuid = "Cuid",
-    Managed = "Managed",
-    Temporal = "Temporal",
-}
+export enum SanitizedEntity {}

@@ -1,7 +1,6 @@
 import { AfterRead, AfterUpdate, BeforeUpdate, Handler, OnUpdate, Req, Use } from "cds-routing-handlers";
-import { ManagerService } from "../../entities";
+import { ManagerService, RequestService } from "../../entities";
 import { HandleMiddleware } from "../../middlewares/handler.middleware";
-import { DataCustom } from "../../types/types";
 import { getAllDaysBetween, getDaysBeforeAfterApril, removeHolidays } from "../../helpers/leaveDayCalculation";
 import { notify } from "../../helpers/notification";
 
@@ -9,9 +8,10 @@ import { notify } from "../../helpers/notification";
 @Use(HandleMiddleware)
 export class RequestManageService {
     @AfterRead()
-    public async updateRequest(@Req() req: DataCustom) {
+    public async updateRequest(@Req() req: any) {
         const { authentication } = req;
-        const requests = await cds.ql.SELECT.from("Requests")
+        
+        const query = cds.ql.SELECT.from("Requests")
             .columns(col => {
                 col.ID,
                     col.reason,
@@ -19,18 +19,20 @@ export class RequestManageService {
                     col.endDay,
                     col.status,
                     col.isOutOfDay,
-                    col.user((user: ManagerService.IUsers) => {
+                    col.user((user) => {
                         user.ID, user.department_id, user.fullName, user.username;
                     });
             })
-            .where(req.params.length > 0 ? { ID: req.params[0] } : "");
-
+        if (req.params.length > 0) {
+            query.where({ID: req.params[0]});
+        }
+        const requests = await query; 
         const data = requests.filter(request => request.user.department_id === authentication.department);
         req.reply({ code: 200, data: data });
     }
 
     @BeforeUpdate()
-    public async validInput(@Req() req: DataCustom) {
+    public async validInput(@Req() req: any) {
         const request = await cds.ql.SELECT.one.from("Requests").where({ ID: req.params[0] });
 
         if (!request) req.error(404, "Couldn't find this request", "");
@@ -44,14 +46,14 @@ export class RequestManageService {
     }
 
     @OnUpdate()
-    public async validManager(@Req() req: DataCustom) {
+    public async validManager(@Req() req: any) {
         const { dataTransaction, authentication } = req;
         const member = await cds.ql.SELECT.one.from("Users").where({ ID: dataTransaction.id });
         if (member.department_id !== authentication.department) req.error(400, "You're not the manager of this request!!!", "");
     }
 
     @AfterUpdate()
-    public async removeTotalDayOff(@Req() req: DataCustom) {
+    public async removeTotalDayOff(@Req() req: any) {
         const { authentication } = req;
         const request = await cds.ql.SELECT.one.from("Requests").where({ ID: req.params[0] });
         const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.dataTransaction.id });

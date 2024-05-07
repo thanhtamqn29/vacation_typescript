@@ -1,6 +1,5 @@
 import { Action, Handler, Param, Req, Func } from "cds-routing-handlers";
 import { PublicService } from "../entities";
-import { Request } from "@sap/cds/apis/services";
 import * as bcrypt from "bcryptjs";
 import cds from "@sap/cds";
 import { generateAccessToken, generateRefreshToken } from "../helpers/jwt";
@@ -11,7 +10,7 @@ export class PublicAction {
     public async loginAction(
         @Param(PublicService.ActionLogin.paramUsername) username: string,
         @Param(PublicService.ActionLogin.paramPassword) password: string,
-        @Req() req: Request
+        @Req() req: any
     ): Promise<any> {
         const user = await cds.read(PublicService.Entity.Users).where({
             username: username,
@@ -32,7 +31,7 @@ export class PublicAction {
         return req.reply({
             code: 200,
             message: "Login successfully",
-            "access token": accessToken,
+            "Access Token": accessToken,
         });
     }
 
