@@ -1,5 +1,3 @@
 node_modules
 gen
 default-env.json
-!srv/**/*.cds
-srv/*

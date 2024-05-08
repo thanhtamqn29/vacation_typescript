@@ -1,9 +1,10 @@
 import { ICdsMiddleware, Req, Jwt, Middleware } from "cds-routing-handlers";
 import { verifyAccessToken } from "../helpers/jwt";
-
+import { vacation } from "../entities";
 @Middleware()
 export class HandleMiddleware implements ICdsMiddleware {
     public async use(@Req() req: any, @Jwt() jwt: string): Promise<any> {
+     
         const decoded: any = verifyAccessToken(jwt);
 
         if (!decoded) {
@@ -11,18 +12,16 @@ export class HandleMiddleware implements ICdsMiddleware {
         }
         if (!decoded.exp) return req.error(403, "Your token is expired");
 
-        const users = await cds.ql.SELECT("Users").where({ ID: decoded.id });
+        const user = await cds.ql.SELECT.one(vacation.SanitizedEntity.Users).where({ ID: decoded.id });
 
-        if (!users || users.length === 0) {
+        
+        if (!user || user.length === 0) {
             return req.error(404, "User not found!", "");
         }
 
-        if (users.length > 1) {
+        if (user.length > 1) {
             return req.error(400, "Something went wrong!", "");
         }
-
-        const user = users[0];
-
 
         req.authentication = {
             id: decoded.id,
@@ -43,7 +42,7 @@ export class HandleMiddleware implements ICdsMiddleware {
         }
 
         if (service[2] === "Departments" && req.method === "POST") {
-            const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.authentication.id });
+            const user = await SELECT.one.from(vacation.Entity.Users).where({ ID: req.authentication.id });
             if (user.department_id) {
                 return req.error(402, "You're already in a department!", "");
             }

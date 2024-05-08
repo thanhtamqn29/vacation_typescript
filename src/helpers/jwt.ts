@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import * as env from "dotenv";
-import { AuthService, PublicService } from "../entities";
+import { AuthService,  PublicService } from "../entities";
 
 env.configDotenv();
 const accessTokenKey = process.env.ACCESS_TOKEN;

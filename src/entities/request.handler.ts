@@ -4,7 +4,7 @@ import { HandleMiddleware } from "../middlewares/handler.middleware";
 import { getAllDaysBetween } from "../helpers/leaveDayCalculation";
 import { notify } from "../helpers/notification";
 import cds from "@sap/cds";
-@Handler(RequestService.SanitizedEntity.Requests)
+@Handler("Requests")
 @Use(HandleMiddleware)
 export class RequestServiceHandler {
     @BeforeCreate()
@@ -23,16 +23,13 @@ export class RequestServiceHandler {
 
     @OnRead()
     public async getOwnRequest(@Req() req: any): Promise<any> {
-        const { authentication } = req;
-
-        if (req.params.length > 0) {
-            const request = await cds.read("Requests").where({ user_ID: authentication.id, ID: req.params[0] });
-            req.reply = request;
-        }
-
-        const requests = await cds.read("Requests").where({ user_ID: authentication.id });
-
-        req.reply = requests;
+        // const { authentication } = req;
+        // if (req.params.length > 0) {
+        //     const request = await cds.read("Requests").where({ user_ID: authentication.id, ID: req.params[0] });
+        //     req.reply = request;
+        // }
+        // const requests = await cds.read("Requests").where({ user_ID: authentication.id });
+        // req.reply = requests;
     }
 
     @AfterCreate()

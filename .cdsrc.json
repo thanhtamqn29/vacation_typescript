@@ -27,5 +27,6 @@
     },
     "odata": {
         "version": "v4"
-    }
+    },
+    "auth": "ias"
 }

@@ -166,26 +166,6 @@ export namespace sap.common {
 }
 
 export namespace AuthService {
-    export interface IUsers {
-        ID: string;
-        createdAt?: Date;
-        createdBy?: string;
-        modifiedAt?: Date;
-        modifiedBy?: string;
-        username: string;
-        password: string;
-        fullName: string;
-        isActive?: boolean;
-        address: string;
-        role?: vacation.Role;
-        refreshToken: string;
-        dayOffThisYear?: number;
-        dayOffLastYear?: number;
-        requests?: vacation.IRequests[];
-        department?: vacation.IDepartments;
-        department_id?: number;
-    }
-
     export enum FuncRefresh {
         name = "refresh",
     }
@@ -198,13 +178,9 @@ export namespace AuthService {
 
     export type FuncLogoutReturn = string;
 
-    export enum Entity {
-        Users = "AuthService.Users",
-    }
+    export enum Entity {}
 
-    export enum SanitizedEntity {
-        Users = "Users",
-    }
+    export enum SanitizedEntity {}
 }
 
 export namespace ManagerService {
@@ -265,7 +241,23 @@ export namespace ManagerService {
         endDay: Date;
         isOutOfDay?: boolean;
         comment?: string;
-        notification?: vacation.INotifications;
+        notification?: INotifications;
+    }
+
+    export interface INotifications {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        sender?: IUsers;
+        sender_ID?: string;
+        receiver?: IUsers;
+        receiver_ID?: string;
+        message: string;
+        isRead?: boolean;
+        request?: IRequestsManage;
+        request_ID?: string;
     }
 
     export enum ActionInvite {
@@ -284,6 +276,7 @@ export namespace ManagerService {
         Calendar = "ManagerService.Calendar",
         Departments = "ManagerService.Departments",
         RequestsManage = "ManagerService.RequestsManage",
+        Notifications = "ManagerService.Notifications",
     }
 
     export enum SanitizedEntity {
@@ -291,6 +284,7 @@ export namespace ManagerService {
         Calendar = "Calendar",
         Departments = "Departments",
         RequestsManage = "RequestsManage",
+        Notifications = "Notifications",
     }
 }
 
@@ -310,9 +304,6 @@ export namespace PublicService {
         refreshToken: string;
         dayOffThisYear?: number;
         dayOffLastYear?: number;
-        requests?: vacation.IRequests[];
-        department?: vacation.IDepartments;
-        department_id?: number;
     }
 
     export enum ActionLogin {
@@ -338,6 +329,26 @@ export namespace PublicService {
 }
 
 export namespace RequestService {
+    export interface IUsers {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        username: string;
+        password: string;
+        fullName: string;
+        isActive?: boolean;
+        address: string;
+        role?: vacation.Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: IRequests[];
+        department?: IDepartments;
+        department_id?: number;
+    }
+
     export interface ICalendar {
         ID: string;
         createdAt?: Date;
@@ -349,6 +360,18 @@ export namespace RequestService {
         holidayName: string;
     }
 
+    export interface IDepartments {
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        id: number;
+        departmentName: string;
+        isHRDepartment?: boolean;
+        members?: IUsers[];
+        isActive?: boolean;
+    }
+
     export interface IRequests {
         ID: string;
         createdAt?: Date;
@@ -357,7 +380,7 @@ export namespace RequestService {
         modifiedBy?: string;
         status?: vacation.Status;
         reason: string;
-        user?: vacation.IUsers;
+        user?: IUsers;
         user_ID?: string;
         startDay: Date;
         endDay: Date;
@@ -372,9 +395,9 @@ export namespace RequestService {
         createdBy?: string;
         modifiedAt?: Date;
         modifiedBy?: string;
-        sender?: vacation.IUsers;
+        sender?: IUsers;
         sender_ID?: string;
-        receiver?: vacation.IUsers;
+        receiver?: IUsers;
         receiver_ID?: string;
         message: string;
         isRead?: boolean;
@@ -383,13 +406,17 @@ export namespace RequestService {
     }
 
     export enum Entity {
+        Users = "RequestService.Users",
         Calendar = "RequestService.Calendar",
+        Departments = "RequestService.Departments",
         Requests = "RequestService.Requests",
         Notifications = "RequestService.Notifications",
     }
 
     export enum SanitizedEntity {
+        Users = "Users",
         Calendar = "Calendar",
+        Departments = "Departments",
         Requests = "Requests",
         Notifications = "Notifications",
     }

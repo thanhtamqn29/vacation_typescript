@@ -1,5 +1,5 @@
 import { Action, Handler, Param, Req, Func } from "cds-routing-handlers";
-import { PublicService } from "../entities";
+import {  PublicService, vacation } from "../entities";
 import * as bcrypt from "bcryptjs";
 import cds from "@sap/cds";
 import { generateAccessToken, generateRefreshToken } from "../helpers/jwt";
@@ -13,7 +13,7 @@ export class PublicAction {
         @Req() req: any
     ): Promise<any> {
         const user = await cds.read(PublicService.Entity.Users).where({
-            username: username,
+            username: username
         });
 
         if (!user || user.length !== 1) return req.error(401, "Invalid username or password", "");
@@ -24,7 +24,7 @@ export class PublicAction {
         const accessToken = generateAccessToken(user[0]);
         const refreshToken = generateRefreshToken(user[0]);
 
-        const updatedUser = await cds.update(PublicService.Entity.Users).where({ ID: user[0].ID }).set({ refreshToken: refreshToken });
+        const updatedUser = await cds.ql.UPDATE(vacation.Entity.Users).where({ ID: user[0].ID }).set({ refreshToken: refreshToken });
         if (!updatedUser) {
             return req.error(500, "Failed to update the user's token.", "");
         }

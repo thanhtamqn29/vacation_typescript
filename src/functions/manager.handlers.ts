@@ -7,9 +7,9 @@ import { HandleMiddleware } from "../middlewares/handler.middleware";
 export class ManagerHandle {
     @Action(ManagerService.ActionInvite.name)
     public async invite(@Req() req: any, @Param(ManagerService.ActionInvite.paramIds) ids: string[]) {
-        const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.authentication.id });
+        const user = await SELECT.one.from("Users").where({ ID: req.authentication.id });
 
-        const getDepartment = await cds.ql.SELECT.one.from("Departments").where({ id: user.department_id, isActive: true });
+        const getDepartment = await SELECT.one.from("Departments").where({ id: user.department_id, isActive: true });
         if (!getDepartment) return req.reject(404, "Couldn't find this department");
 
         let newMembers = [];
@@ -17,7 +17,7 @@ export class ManagerHandle {
         let notInSystem = [];
 
         for (const member of ids) {
-            const user = await cds.ql.SELECT.one.from("Users").where({ ID: member });
+            const user = await SELECT.one.from("Users").where({ ID: member });
             if (user) {
                 if (!user.department_id) {
                     await cds.ql.UPDATE("Users").where({ ID: user.ID }).set({ department_id: getDepartment.id });

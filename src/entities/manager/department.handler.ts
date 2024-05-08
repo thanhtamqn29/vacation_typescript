@@ -4,7 +4,7 @@ import { HandleMiddleware } from "../../middlewares/handler.middleware";
 
 @Handler(ManagerService.SanitizedEntity.Departments)
 @Use(HandleMiddleware)
-export class ManageService {
+export class ManageDepartmentService {
     @BeforeCreate()
     public async createID(@Req() req: any) {
         const departments = await cds.ql.SELECT("Departments");

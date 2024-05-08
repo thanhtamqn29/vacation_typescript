@@ -12,7 +12,7 @@ export class AuthHandlers {
         
         if (decodedAccessToken.exp) return req.error(400, "This access token is usable");
 
-        const user = await cds.ql.SELECT.one.from(AuthService.Entity.Users).where({ ID: decodedAccessToken.id });
+        const user = await SELECT.one.from("Users").where({ ID: decodedAccessToken.id });
 
         if (!user) return req.error(404, "Couldn't find this user!");
 

@@ -1,12 +1,6 @@
 {
     "typescript.tsdk": "node_modules/typescript/lib",
-    "sqltools.connections": [
-        {
-            "database": "bookshop.db",
-            "driver": "SQLite",
-            "name": "bookshop"
-        }
-    ],
+    "sqltools.connections": [],
     "sqltools.useNodeRuntime": true,
     "prettier.printWidth": 160,
     "prettier.requireConfig": true,
