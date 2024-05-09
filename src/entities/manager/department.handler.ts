@@ -1,19 +1,12 @@
-import { AfterCreate, BeforeCreate, BeforeRead, Handler, OnCreate, Req, Use } from "cds-routing-handlers";
-import { ManagerService } from "../../entities";
+import { AfterCreate, AfterRead, BeforeCreate, BeforeRead, Handler, OnCreate, OnRead, OnReject, Req, Use } from "cds-routing-handlers";
+import { mng } from "../../entities";
 import { HandleMiddleware } from "../../middlewares/handler.middleware";
 
-@Handler(ManagerService.SanitizedEntity.Departments)
+@Handler(mng.ManagerService.SanitizedEntity.MngDepartments)
 @Use(HandleMiddleware)
 export class ManageDepartmentService {
-    @BeforeCreate()
-    public async createID(@Req() req: any) {
-        const departments = await cds.ql.SELECT("Departments");
-
-        req.data = { id: departments.length + 1, ...req.data };
-    }
-
-    @AfterCreate()
-    public async updateManager(@Req() req: any) {
-        await cds.ql.UPDATE("Users").set({department_id : req.data.id}).where({ID: req.authentication.id})
+    @AfterRead()
+    public async departmentResponse(@Req() req: any) {
+        return (req.results = req.results.filter(department => department.id === req.authentication.department));
     }
 }

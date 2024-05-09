@@ -1,5 +1,7 @@
 export const notify = async (response: any, action: string) => {
     const { data, authentication } = response;
+    console.log(data, authentication);
+    
     const getUser = await SELECT.one.from("Users").where({ ID: data.user_ID });
 
     const getManager = await SELECT.one.from("Users").where({ department_id: getUser.department_id, role: "manager" });
@@ -46,7 +48,7 @@ export const flaggedNotification = async (response: any, authentication: any) =>
 };
 
 const responseMessage = (name: string, action: string, reason: string): string => {
-    if (action === "new" || action === "update" || action === "delete")
-        return `${name} has just sent you a(n) ${action} request with the reason : ${reason}. Check it out!!!`;
+    if (action === "created" || action === "updated" || action === "deleted")
+        return `${name} have just ${action} a request with the reason : ${reason}. Check it out!!!`;
     if (action === "accepted" || action === "rejected") return `${name} has ${action} your request. Check it out!!!`;
 };

@@ -7,27 +7,29 @@ import { HandleMiddleware } from "./middlewares/handler.middleware";
 
 export const application = async () => {
     const app = express();
-    const hdl = createCombinedHandler({
-        handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],
-    });
+    const publicPath = ["pbl"];
+
     await cds.connect("db");
+
     await cds
         .serve("all")
         .in(app)
         .with((srv: any) => {
-            // console.log(srv.path);
-            // if (srv.path === "/public") {
-            //     const hdl = createCombinedHandler({
-            //         handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],
-            //     });
-            //     return hdl(srv);
-            // } else {
-            //     const hdl = createCombinedHandler({
-            //         middlewares: [HandleMiddleware],
-            //         handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],
-            //     });
-            //     return hdl(srv);
-            // }
+            const service = srv.name.split(".");
+
+            if (publicPath.includes(service[0])) {
+                const hdl = createCombinedHandler({
+                    handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],
+                });
+                return hdl(srv);
+            } else {
+                const hdl = createCombinedHandler({
+                    middlewares: [HandleMiddleware],
+                    handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],
+                });
+                return hdl(srv);
+            }
+            // hdl(srv)
         });
 
     return app;

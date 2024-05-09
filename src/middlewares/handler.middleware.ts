@@ -5,6 +5,7 @@ import { vacation } from "../entities";
 export class HandleMiddleware implements ICdsMiddleware {
     public async use(@Req() req: any, @Jwt() jwt: string): Promise<any> {
      
+    
         const decoded: any = verifyAccessToken(jwt);
 
         if (!decoded) {
@@ -12,8 +13,8 @@ export class HandleMiddleware implements ICdsMiddleware {
         }
         if (!decoded.exp) return req.error(403, "Your token is expired");
 
-        const user = await cds.ql.SELECT.one(vacation.SanitizedEntity.Users).where({ ID: decoded.id });
-
+        const [user] = await cds.ql.SELECT.from("Users").where({ ID: decoded.id });
+        
         
         if (!user || user.length === 0) {
             return req.error(404, "User not found!", "");
@@ -22,7 +23,7 @@ export class HandleMiddleware implements ICdsMiddleware {
         if (user.length > 1) {
             return req.error(400, "Something went wrong!", "");
         }
-
+        
         req.authentication = {
             id: decoded.id,
             role: decoded.role,

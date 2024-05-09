@@ -1,8 +1,8 @@
 import { BeforeCreate, Handler, Req, Use } from "cds-routing-handlers";
-import { ManagerService } from "../../entities";
+import { mng } from "../../entities";
 import { HandleMiddleware } from "../../middlewares/handler.middleware";
 
-@Handler(ManagerService.SanitizedEntity.Calendar)
+@Handler(mng.ManagerService.SanitizedEntity.MngCalendar)
 @Use(HandleMiddleware)
 export class CalendarHandler {
     @BeforeCreate()
@@ -13,6 +13,5 @@ export class CalendarHandler {
 
         if (startDay > endDay) return req.error(400, "Start day cannot greater than end day", "");
         if (endDay < startDay) return req.error(400, "End day cannot less than start day", "");
-    
     }
 }

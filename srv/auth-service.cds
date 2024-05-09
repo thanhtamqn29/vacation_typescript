@@ -1,3 +1,7 @@
+namespace auth;
+
+
+
 using vacation from '../db/schema';
 
 

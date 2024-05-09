@@ -1,15 +1,20 @@
+namespace mng;
+
 using vacation from '../db/schema';
 
 
-
-
-
 service ManagerService @(path: '/manage') {
-    entity Users          as projection on vacation.Users;
-    entity Calendar       as projection on vacation.Calendar;
-    entity Departments    as projection on vacation.Departments;
-    entity RequestsManage as projection on vacation.Requests;
-    entity Notifications  as projection on vacation.Notifications;
-    action invite(ids : array of String) returns String;
+    entity MngUsers         as projection on vacation.Users;
 
+    @(Capabilites: {
+        Insertable,
+        Updateable
+    })
+    entity MngCalendar      as projection on vacation.Calendar;
+
+    entity MngDepartments   as projection on vacation.Departments;
+    entity MngRequests      as projection on vacation.Requests;
+    entity MngNotifications as projection on vacation.Notifications;
+    action invite(ids : array of String)   returns String;
+    action create(departmentName : String) returns String;
 };

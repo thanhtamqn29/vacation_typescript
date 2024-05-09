@@ -1,12 +1,12 @@
 import * as jwt from "jsonwebtoken";
 import * as env from "dotenv";
-import { AuthService,  PublicService } from "../entities";
+import {pbl } from "../entities";
 
 env.configDotenv();
 const accessTokenKey = process.env.ACCESS_TOKEN;
 const refreshTokenKey = process.env.REFRESH_TOKEN;
 
-const generateAccessToken = (user: PublicService.IUsers) => {
+const generateAccessToken = (user: pbl.PublicService.IPblUsers) => {
     return jwt.sign(
         {
             id: user.ID,
@@ -17,7 +17,7 @@ const generateAccessToken = (user: PublicService.IUsers) => {
     );
 };
 
-const generateRefreshToken = (user: PublicService.IUsers) => {
+const generateRefreshToken = (user: pbl.PublicService.IPblUsers) => {
     return jwt.sign(
         {
             id: user.ID,

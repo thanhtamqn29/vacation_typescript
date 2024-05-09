@@ -1,35 +1,57 @@
-import { Handler, Req, BeforeCreate, OnRead, Use, AfterCreate, BeforeUpdate, AfterDelete, OnCreate, AfterUpdate } from "cds-routing-handlers";
-import { RequestService } from "../entities";
+import { Handler, Req, BeforeCreate, OnRead, Use, AfterCreate, BeforeUpdate, AfterDelete, OnCreate, AfterUpdate, BeforeDelete } from "cds-routing-handlers";
+import { epl } from "../entities";
 import { HandleMiddleware } from "../middlewares/handler.middleware";
 import { getAllDaysBetween } from "../helpers/leaveDayCalculation";
 import { notify } from "../helpers/notification";
 import cds from "@sap/cds";
-@Handler("Requests")
+@Handler(epl.EmployeeService.SanitizedEntity.EplRequests)
 @Use(HandleMiddleware)
-export class RequestServiceHandler {
+export class EmployeeServiceHandler {
     @BeforeCreate()
     @BeforeUpdate()
     public async validDateTime(@Req() req: any): Promise<any> {
-        const startDay = new Date(req.data.startDay);
-        const endDay = new Date(req.data.endDay);
-        const currentDate = new Date();
+        const { data } = req;
+        const request = await cds.ql.SELECT.one.from("Requests").where({ ID: req.params[0] });
+        if (!request) return req.error(500, "Couldn't find this request", "");
+        if (data.shift && data.endDay) return req.error(400, "You take one shift leave, you shouldn't fill the end day");
+        else {
+            const startDay = new Date(data.startDay);
+            const endDay = new Date(data.endDay);
+            const currentDate = new Date();
 
-        if (startDay < currentDate || endDay < currentDate) {
-            return req.error(400, "Start day and end day must be after the current date.", "");
-        } else if (startDay >= endDay) {
-            return req.error(400, "End day must be after start day.", "");
+            if (startDay < currentDate || endDay < currentDate) {
+                return req.error(400, "Start day and end day must be after the current date.", "");
+            } else if (startDay >= endDay) {
+                return req.error(400, "End day must be after start day.", "");
+            }
         }
+    }
+
+    @BeforeUpdate()
+    public async validInput(@Req() req: any): Promise<any> {
+        const { data } = req;
+        if (data.status || data.comment) return req.error(400, "You cannot update these field!!", "");
+    }
+
+    @BeforeUpdate()
+    @BeforeDelete()
+    public async validRequest(@Req() req: any): Promise<any> {
+        const [request] = await cds.ql.SELECT("Requests").where({ ID: req.params[0] });
+
+        if (request.status !== "pending") return req.error(400, "This request has just adjusted by the manager, you cannot modify it!!!", "");
     }
 
     @OnRead()
     public async getOwnRequest(@Req() req: any): Promise<any> {
-        // const { authentication } = req;
-        // if (req.params.length > 0) {
-        //     const request = await cds.read("Requests").where({ user_ID: authentication.id, ID: req.params[0] });
-        //     req.reply = request;
-        // }
-        // const requests = await cds.read("Requests").where({ user_ID: authentication.id });
-        // req.reply = requests;
+        const { authentication } = req;
+        if (req.params.length > 0) {
+            const request = await cds.read("Requests").where({ user_ID: authentication.id, ID: req.params[0] });
+            req.results = request;
+        }
+        const requests = await cds.read("Requests").where({ user_ID: authentication.id });
+        console.log(requests);
+
+        req.results = requests;
     }
 
     @AfterCreate()
@@ -52,7 +74,7 @@ export class RequestServiceHandler {
         }
         const response = await cds.ql.SELECT.one.from("Requests").where({ ID: data.ID });
 
-        await notify({ data: response, authentication }, "new");
+        await notify({ data: response, authentication }, "created");
         return req.reply({ code: 200, message: "Created successfully", data: req.reply });
     }
 
@@ -60,12 +82,12 @@ export class RequestServiceHandler {
     public async deleteRequest(@Req() req: any) {
         const { data, authentication } = req;
         if (data || data?.length > 0) req.reply({ code: 200, message: "Canceled successfully" });
-        await notify({ data: data, authentication }, "delete");
+        await notify({ data: data, authentication }, "deleted");
     }
 
     @AfterUpdate()
     public async sendingNotify(@Req() req: any) {
         const { data, authentication } = req;
-        await notify({ data: data, authentication }, "update");
+        await notify({ data: data, authentication }, "updated");
     }
 }

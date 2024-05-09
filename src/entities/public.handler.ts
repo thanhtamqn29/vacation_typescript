@@ -1,9 +1,9 @@
 import { Handler, Req, BeforeCreate, AfterCreate } from "cds-routing-handlers";
-import { PublicService, vacation } from "../entities";
+import { pbl, vacation } from "../entities";
 import * as bcrypt from "bcryptjs";
 import { calculateVacationDays } from "../helpers/leaveDayCalculation";
 
-@Handler(PublicService.SanitizedEntity.Users)
+@Handler(pbl.PublicService.SanitizedEntity.PblUsers)
 export class PublicHandler {
     @BeforeCreate()
     public async hashPassword(@Req() req: any): Promise<void> {

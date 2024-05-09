@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "description": "A simple self-contained bookshop service.",
     "dependencies": {
-        "@sap/cds": "^6.8.4",
+        "@sap/cds": "^5.1.5",
         "@sap/xsenv": "^5.1.0",
         "@sap/xssec": "^3.6.1",
         "bcryptjs": "^2.4.3",
-        "cds-routing-handlers": "^3.0.5",
+        "cds-routing-handlers": "^3.0.7",
         "dotenv": "^16.4.5",
         "express": "^4.17.1",
         "jsonwebtoken": "^9.0.2",

@@ -1,12 +1,12 @@
 import {  Func,  Handler,  Jwt,  Req,  Use } from "cds-routing-handlers";
-import {  AuthService } from "../entities";
+import {  auth } from "../entities";
 import {  HandleMiddleware } from "../middlewares/handler.middleware";
 import {  generateAccessToken,  verifyAccessToken,  verifyRefreshToken } from "../helpers/jwt";
 
 @Handler()
 @Use(HandleMiddleware)
 export class AuthHandlers {
-    @Func(AuthService.FuncRefresh.name)
+    @Func(auth.AuthService.FuncRefresh.name)
     public async refresh(@Req() req: any, @Jwt() Jwt: string) {
         const decodedAccessToken : any = verifyAccessToken(Jwt);
         
@@ -27,7 +27,7 @@ export class AuthHandlers {
         req.reply({code: 200, "New Access Token": newAccessToken});
     }
 
-    @Func(AuthService.FuncLogout.name)
+    @Func(auth.AuthService.FuncLogout.name)
     public async logout(@Req() req: any, @Jwt() Jwt: string) {
         const decoded : any = verifyAccessToken(Jwt);
         await cds.ql.UPDATE("Users").where({ ID: decoded.id }).set({ refreshToken: null });

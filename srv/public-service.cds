@@ -1,17 +1,11 @@
+namespace pbl;
+
 using vacation from '../db/schema';
 
 
 service PublicService @(path: '/public') {
 
-
-  entity Users as
-    projection on vacation.Users {
-      *
-    }
-    excluding {
-      requests,
-      department
-    };
-
+  entity PblUsers as projection on vacation.Users;
   action login(username : String, password : String) returns String;
+
 }

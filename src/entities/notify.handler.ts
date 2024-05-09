@@ -1,8 +1,10 @@
-import { AfterRead, Handler, Req } from "cds-routing-handlers";
-import { RequestService } from "../entities";
+import { AfterRead, Handler, Req, Use } from "cds-routing-handlers";
+import { epl } from "../entities";
 import { flaggedNotification } from "../helpers/notification";
+import { HandleMiddleware } from "../middlewares/handler.middleware";
 
-@Handler(RequestService.SanitizedEntity.Notifications)
+@Handler(epl.EmployeeService.SanitizedEntity.EplNotifications)
+@Use(HandleMiddleware)
 export class NotificationsHandler {
     @AfterRead()
     public async beforeRead(@Req() req: any) {

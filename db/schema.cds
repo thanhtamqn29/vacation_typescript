@@ -16,6 +16,11 @@ type Status : String enum {
     rejected;
 }
 
+type Shift  : String enum {
+    M;
+    A;
+}
+
 @assert.unique: {username: [username]}
 entity Users : cuid, managed {
     username       : String;
@@ -38,6 +43,7 @@ entity Requests : cuid, managed {
     user         : Association to Users;
     startDay     : Date;
     endDay       : Date;
+    shift        : Shift default null;
     isOutOfDay   : Boolean default false;
     comment      : String default '';
     notification : Association to Notifications
