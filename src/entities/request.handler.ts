@@ -1,4 +1,18 @@
-import { Handler, Req, BeforeCreate, OnRead, Use, AfterCreate, BeforeUpdate, AfterDelete, OnCreate, AfterUpdate, BeforeDelete } from "cds-routing-handlers";
+import {
+    Handler,
+    Req,
+    BeforeCreate,
+    OnRead,
+    Use,
+    AfterCreate,
+    BeforeUpdate,
+    AfterDelete,
+    OnCreate,
+    AfterUpdate,
+    BeforeDelete,
+    OnDelete,
+    OnUpdate,
+} from "cds-routing-handlers";
 import { epl } from "../entities";
 import { HandleMiddleware } from "../middlewares/handler.middleware";
 import { getAllDaysBetween } from "../helpers/leaveDayCalculation";
@@ -11,8 +25,11 @@ export class EmployeeServiceHandler {
     @BeforeUpdate()
     public async validDateTime(@Req() req: any): Promise<any> {
         const { data } = req;
-        const request = await cds.ql.SELECT.one.from("Requests").where({ ID: req.params[0] });
-        if (!request) return req.error(500, "Couldn't find this request", "");
+        if (req.params[0]) {
+            const request = await cds.ql.SELECT.one.from("Requests").where({ ID: req.params[0] });
+            if (!request) return req.error(500, "Couldn't find this request", "");
+        }
+
         if (data.shift && data.endDay) return req.error(400, "You take one shift leave, you shouldn't fill the end day");
         else {
             const startDay = new Date(data.startDay);
@@ -45,20 +62,22 @@ export class EmployeeServiceHandler {
     public async getOwnRequest(@Req() req: any): Promise<any> {
         const { authentication } = req;
         if (req.params.length > 0) {
-            const request = await cds.read("Requests").where({ user_ID: authentication.id, ID: req.params[0] });
+            const request = await cds.read("Requests").where({ user_ID: authentication.ID, ID: req.params[0] });
             req.results = request;
         }
-        const requests = await cds.read("Requests").where({ user_ID: authentication.id });
+        const requests = await cds.read("Requests").where({ user_ID: authentication.ID });
         console.log(requests);
 
         req.results = requests;
     }
 
+
+
     @AfterCreate()
     public async updateRequest(@Req() req: any) {
         const { data, authentication } = req;
 
-        const user = await cds.ql.SELECT.one.from("Users").where({ ID: authentication.id });
+        const user = await cds.ql.SELECT.one.from("Users").where({ ID: authentication.ID });
 
         const offDays = getAllDaysBetween(new Date(req.data.startDay), new Date(req.data.endDay));
         if (offDays.length > user.dayOffThisYear + user.dayOffLastYear) {
@@ -74,7 +93,7 @@ export class EmployeeServiceHandler {
         }
         const response = await cds.ql.SELECT.one.from("Requests").where({ ID: data.ID });
 
-        await notify({ data: response, authentication }, "created");
+        await notify({data: response, authentication }, "created");
         return req.reply({ code: 200, message: "Created successfully", data: req.reply });
     }
 

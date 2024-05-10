@@ -8,6 +8,7 @@ export namespace vacation {
         pending,
         accepted,
         rejected,
+        approved,
     }
 
     export enum Shift {
@@ -24,7 +25,7 @@ export namespace vacation {
         username: string;
         password: string;
         fullName: string;
-        isActive?: boolean;
+        status?: boolean;
         address: string;
         role?: Role;
         refreshToken: string;
@@ -199,7 +200,7 @@ export namespace epl.EmployeeService {
         username: string;
         password: string;
         fullName: string;
-        isActive?: boolean;
+        status?: boolean;
         address: string;
         role?: vacation.Role;
         refreshToken: string;
@@ -294,7 +295,7 @@ export namespace mng.ManagerService {
         username: string;
         password: string;
         fullName: string;
-        isActive?: boolean;
+        status?: boolean;
         address: string;
         role?: vacation.Role;
         refreshToken: string;
@@ -373,16 +374,16 @@ export namespace mng.ManagerService {
 
     export type ActionInviteReturn = string;
 
-    export enum ActionCreate {
-        name = "create",
+    export enum ActionCreateDepartment {
+        name = "createDepartment",
         paramDepartmentName = "departmentName",
     }
 
-    export interface IActionCreateParams {
+    export interface IActionCreateDepartmentParams {
         departmentName: string;
     }
 
-    export type ActionCreateReturn = string;
+    export type ActionCreateDepartmentReturn = string;
 
     export enum Entity {
         MngUsers = "mng.ManagerService.MngUsers",
@@ -411,7 +412,7 @@ export namespace pbl.PublicService {
         username: string;
         password: string;
         fullName: string;
-        isActive?: boolean;
+        status?: boolean;
         address: string;
         role?: vacation.Role;
         refreshToken: string;

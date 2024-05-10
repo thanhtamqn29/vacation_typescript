@@ -4,8 +4,6 @@ import { vacation } from "../entities";
 @Middleware()
 export class HandleMiddleware implements ICdsMiddleware {
     public async use(@Req() req: any, @Jwt() jwt: string): Promise<any> {
-     
-    
         const decoded: any = verifyAccessToken(jwt);
 
         if (!decoded) {
@@ -14,8 +12,7 @@ export class HandleMiddleware implements ICdsMiddleware {
         if (!decoded.exp) return req.error(403, "Your token is expired");
 
         const [user] = await cds.ql.SELECT.from("Users").where({ ID: decoded.id });
-        
-        
+
         if (!user || user.length === 0) {
             return req.error(404, "User not found!", "");
         }
@@ -23,18 +20,22 @@ export class HandleMiddleware implements ICdsMiddleware {
         if (user.length > 1) {
             return req.error(400, "Something went wrong!", "");
         }
-        
+        if (user.role === "staff" && !user.department_id) return req.error(400, "You are not in the department");
+
         req.authentication = {
-            id: decoded.id,
+            ID: decoded.id,
             role: decoded.role,
             department: user.department_id,
         };
 
         const service = req.req.originalUrl ? req.req.originalUrl.split("/") : null;
 
+        const method = req.method;
         if (service && service[1] === "manage") {
-            this.checkRoleForManagePath(req, service);
+            await this.checkRoleForManagePath(req, service);
         }
+
+        await this.checkPendingRequest(req, service, method);
     }
 
     private checkRoleForManagePath = async (req: any, service: Array<String>) => {
@@ -43,9 +44,20 @@ export class HandleMiddleware implements ICdsMiddleware {
         }
 
         if (service[2] === "Departments" && req.method === "POST") {
-            const user = await SELECT.one.from(vacation.Entity.Users).where({ ID: req.authentication.id });
+            const user = await SELECT.one.from(vacation.Entity.Users).where({ ID: req.authentication.ID });
             if (user.department_id) {
                 return req.error(402, "You're already in a department!", "");
+            }
+        }
+    };
+
+    private checkPendingRequest = async (req: any, service: Array<string>, method: string) => {
+        if (service[2] === "EplRequests" && method === "POST") {
+            const requests = await cds.ql.SELECT("Requests").where({ user_ID: req.authentication.ID });
+
+            for (const request of requests) {
+                if (request.status === "pending")
+                    return req.error(400, "You already have a pending request, please try again when the manager accepted your request!", "");
             }
         }
     };

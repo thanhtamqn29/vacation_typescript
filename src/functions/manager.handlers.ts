@@ -5,9 +5,9 @@ import { HandleMiddleware } from "../middlewares/handler.middleware";
 @Handler()
 @Use(HandleMiddleware)
 export class ManagerHandle {
-    @Action(mng.ManagerService.ActionCreate.name)
-    public async createDepartment(@Param(mng.ManagerService.ActionCreate.paramDepartmentName) departmentName: string, @Req() req: any) {
-        const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.authentication.id });
+    @Action(mng.ManagerService.ActionCreateDepartment.name)
+    public async createDepartment(@Param(mng.ManagerService.ActionCreateDepartment.paramDepartmentName) departmentName: string, @Req() req: any) {
+        const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.authentication.ID });
         
         if (user.department_id) return req.error(400, "You already have a department", "");
 
@@ -17,7 +17,7 @@ export class ManagerHandle {
 
         await cds.ql.INSERT.into("Departments").entries(req.data);
 
-        await cds.ql.UPDATE("Users").set({ department_id: req.data.id }).where({ ID: req.authentication.id });
+        await cds.ql.UPDATE("Users").set({ department_id: req.data.id }).where({ ID: req.authentication.ID });
 
         const data = await cds.ql.SELECT("Departments").where({ ID: req.data.id });
         return (req.results = {
@@ -29,7 +29,7 @@ export class ManagerHandle {
 
     @Action(mng.ManagerService.ActionInvite.name)
     public async invite(@Req() req: any, @Param(mng.ManagerService.ActionInvite.paramIds) ids: string[]) {
-        const user = await SELECT.one.from("Users").where({ ID: req.authentication.id });
+        const user = await SELECT.one.from("Users").where({ ID: req.authentication.ID });
 
         const getDepartment = await SELECT.one.from("Departments").where({ id: user.department_id, isActive: true });
         if (!getDepartment) return req.reject(404, "Couldn't find this department");

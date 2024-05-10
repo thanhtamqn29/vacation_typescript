@@ -13,6 +13,6 @@ export class NotificationsHandler {
         if (params.length > 0) {
             await flaggedNotification(req.results, authentication);
         }
-        if (params.length === 0) req.results = req.results.filter(notify => notify.receiver_ID === authentication.id);
+        if (params.length === 0) req.results = req.results.filter(notify => notify.receiver_ID === authentication.ID);
     }
 }

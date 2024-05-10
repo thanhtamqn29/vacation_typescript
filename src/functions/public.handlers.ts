@@ -15,8 +15,9 @@ export class PublicAction {
         const user = await cds.ql.SELECT(vacation.Entity.Users).where({
             username: username,
         });
-
+        
         if (!user || user.length !== 1) return req.error(401, "Invalid username or password", "");
+        if (!user[0].status) return req.error(400, "Perhaps you are not allow to access to our system, contact admin about this issue!", "");
 
         if (!(await bcrypt.compare(password, user[0].password))) {
             return req.error(401, "Invalid password", "");

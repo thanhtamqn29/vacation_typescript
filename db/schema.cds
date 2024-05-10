@@ -14,6 +14,7 @@ type Status : String enum {
     pending;
     accepted;
     rejected;
+    approved;
 }
 
 type Shift  : String enum {
@@ -26,11 +27,11 @@ entity Users : cuid, managed {
     username       : String;
     password       : String;
     fullName       : String;
-    isActive       : Boolean default true;
+    status         : Boolean default true;
     address        : String;
     role           : Role default 'staff';
     refreshToken   : String;
-    dayOffThisYear : Decimal(10, 2) default 0;
+    dayOffThisYear : Decimal(10, 2) default 1.25;
     dayOffLastYear : Decimal(10, 2) default 0;
     requests       : Association to many Requests
                          on requests.user = $self;
