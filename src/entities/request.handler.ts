@@ -7,11 +7,8 @@ import {
     AfterCreate,
     BeforeUpdate,
     AfterDelete,
-    OnCreate,
     AfterUpdate,
     BeforeDelete,
-    OnDelete,
-    OnUpdate,
 } from "cds-routing-handlers";
 import { epl } from "../entities";
 import { HandleMiddleware } from "../middlewares/handler.middleware";
