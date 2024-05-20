@@ -207,3 +207,12 @@ export const removeHolidays = async (offDays: Array<string>) => {
 
     return offDays;
 };
+export const filterDaysInCurrentMonth = async (days) =>{
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    return days.filter((day) => {
+      const month = new Date(day).getMonth() + 1;
+      const year = new Date(day).getFullYear();
+      return month === currentMonth && year === currentYear;
+    });
+  };

@@ -285,6 +285,79 @@ export namespace epl.EmployeeService {
     }
 }
 
+export namespace HrManagerService {
+    export interface IUsers {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        username: string;
+        password: string;
+        fullName: string;
+        status?: boolean;
+        address: string;
+        role?: vacation.Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: IRequests[];
+        department?: vacation.IDepartments;
+        department_id?: number;
+    }
+
+    export interface IRequests {
+        ID: string;
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        status?: vacation.Status;
+        reason: string;
+        user?: IUsers;
+        user_ID?: string;
+        startDay: Date;
+        endDay: Date;
+        shift?: vacation.Shift;
+        isOutOfDay?: boolean;
+        comment?: string;
+        notification?: vacation.INotifications;
+    }
+
+    export interface IUserRequests {
+        request_ID: string;
+        request_status?: vacation.Status;
+        user_ID: string;
+        username: string;
+        role?: vacation.Role;
+        id: number;
+        departmentName: string;
+        isHRDepartment?: boolean;
+        startDay: Date;
+        endDay: Date;
+        reason: string;
+        comment?: string;
+    }
+
+    export enum FuncExportExcel {
+        name = "exportExcel",
+    }
+
+    export type FuncExportExcelReturn = string;
+
+    export enum Entity {
+        Users = "HrManagerService.Users",
+        Requests = "HrManagerService.Requests",
+        UserRequests = "HrManagerService.UserRequests",
+    }
+
+    export enum SanitizedEntity {
+        Users = "Users",
+        Requests = "Requests",
+        UserRequests = "UserRequests",
+    }
+}
+
 export namespace mng.ManagerService {
     export interface IMngUsers {
         ID: string;
