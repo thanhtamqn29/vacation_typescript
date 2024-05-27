@@ -32,7 +32,7 @@ export class PublicAction {
         return req.reply({
             code: 200,
             message: "Login successfully",
-            "Access Token": accessToken,
+            accessToken: accessToken,
         });
     }
 }

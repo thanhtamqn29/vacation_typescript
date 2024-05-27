@@ -1,10 +1,10 @@
 export const notify = async (response: any, action: string) => {
     const { data, authentication } = response;
-
-    const getUser = await SELECT.one.from("Users").where({ ID: data.user_ID });
+ 
+    const getUser = await cds.ql.SELECT.one.from("Users").where({ ID: authentication.ID });
 
     const getManager = await SELECT.one.from("Users").where({ department_id: getUser.department_id, role: "manager" });
-    let notify;
+    let notify: any;
     if (action === "accepted" || action === "rejected") {
         notify = responseMessage(getManager.fullName, action, "");
         await cds.ql.INSERT.into("Notifications").entries({

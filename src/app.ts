@@ -2,15 +2,15 @@ import "reflect-metadata";
 import express from "express";
 import { createCombinedHandler } from "cds-routing-handlers";
 import cds from "@sap/cds";
-
+import cors from "cors";
 import { HandleMiddleware } from "./middlewares/handler.middleware";
 
 export const application = async () => {
     const app = express();
     const publicPath = ["pbl"];
+    app.use(cors({ credentials: true, origin: "http://localhost:8080" }));
 
     await cds.connect("db");
-
     await cds
         .serve("all")
         .in(app)

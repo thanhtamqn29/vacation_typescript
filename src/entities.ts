@@ -9,6 +9,7 @@ export namespace vacation {
         accepted,
         rejected,
         approved,
+        removed,
     }
 
     export enum Shift {
@@ -36,6 +37,12 @@ export namespace vacation {
         department_id?: number;
     }
 
+    export enum RequestsDayOffType {
+        FULL_DAY,
+        HALF_DAY,
+        PERIOD_TIME,
+    }
+
     export interface IRequests {
         ID: string;
         createdAt?: Date;
@@ -48,6 +55,7 @@ export namespace vacation {
         user_ID?: string;
         startDay: Date;
         endDay: Date;
+        dayOffType: RequestsDayOffType;
         shift?: Shift;
         isOutOfDay?: boolean;
         comment?: string;
@@ -234,6 +242,12 @@ export namespace epl.EmployeeService {
         isActive?: boolean;
     }
 
+    export enum EplRequestsDayOffType {
+        FULL_DAY,
+        HALF_DAY,
+        PERIOD_TIME,
+    }
+
     export interface IEplRequests {
         ID: string;
         createdAt?: Date;
@@ -246,6 +260,7 @@ export namespace epl.EmployeeService {
         user_ID?: string;
         startDay: Date;
         endDay: Date;
+        dayOffType: EplRequestsDayOffType;
         shift?: vacation.Shift;
         isOutOfDay?: boolean;
         comment?: string;
@@ -306,6 +321,12 @@ export namespace HrManagerService {
         department_id?: number;
     }
 
+    export enum RequestsDayOffType {
+        FULL_DAY,
+        HALF_DAY,
+        PERIOD_TIME,
+    }
+
     export interface IRequests {
         ID: string;
         createdAt?: Date;
@@ -318,6 +339,7 @@ export namespace HrManagerService {
         user_ID?: string;
         startDay: Date;
         endDay: Date;
+        dayOffType: RequestsDayOffType;
         shift?: vacation.Shift;
         isOutOfDay?: boolean;
         comment?: string;
@@ -402,6 +424,12 @@ export namespace mng.ManagerService {
         isActive?: boolean;
     }
 
+    export enum MngRequestsDayOffType {
+        FULL_DAY,
+        HALF_DAY,
+        PERIOD_TIME,
+    }
+
     export interface IMngRequests {
         ID: string;
         createdAt?: Date;
@@ -414,6 +442,7 @@ export namespace mng.ManagerService {
         user_ID?: string;
         startDay: Date;
         endDay: Date;
+        dayOffType: MngRequestsDayOffType;
         shift?: vacation.Shift;
         isOutOfDay?: boolean;
         comment?: string;

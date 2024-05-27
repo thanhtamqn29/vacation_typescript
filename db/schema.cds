@@ -15,6 +15,7 @@ type Status : String enum {
     accepted;
     rejected;
     approved;
+    removed;
 }
 
 type Shift  : String enum {
@@ -44,6 +45,7 @@ entity Requests : cuid, managed {
     user         : Association to Users;
     startDay     : Date;
     endDay       : Date;
+    dayOffType   : String enum {FULL_DAY; HALF_DAY; PERIOD_TIME};
     shift        : Shift default null;
     isOutOfDay   : Boolean default false;
     comment      : String default '';

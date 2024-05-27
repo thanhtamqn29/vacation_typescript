@@ -7,7 +7,7 @@ export class Server {
         const app = await application();
 
         // Run the server.
-        const port = process.env.PORT || 3001;
+        const port = process.env.PORT || 4004;
         app.listen(port, async () => {
             cron.schedule("59 59 23 * * *", async () => {
                 await systemRunner();
