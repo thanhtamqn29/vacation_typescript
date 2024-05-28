@@ -63,29 +63,29 @@ export class EmployeeServiceHandler {
             }
         }
     }
-    // @AfterUpdate()
-    // public async handlerUpdateRequest(@Req() req: any) {
-    //     const { data ,authentication} = req;
+    @AfterUpdate()
+    public async handlerUpdateRequest(@Req() req: any) {
+        const { data ,authentication} = req;
 
-    //     const user = await cds.ql.SELECT.one.from("Users").where({ ID:data.user_ID });
+        const user = await cds.ql.SELECT.one.from("Users").where({ ID:data.user_ID });
 
-    //     const offDays = getAllDaysBetween(new Date(data.startDay), new Date(data.endDay));
-    //     if (offDays.length > user.dayOffThisYear + user.dayOffLastYear) {
-    //         await cds.ql
-    //             .UPDATE("Requests")
-    //             .where({ ID:data.ID })
-    //             .set({ ...data, isOutOfDay: true, user_ID: data.user_ID });
-    //     } else {
-    //         await cds.ql
-    //             .UPDATE("Requests")
-    //             .where({ ID: data.ID })
-    //             .set({ ...data,  isOutOfDay: false,user_ID:data.user_ID });
-    //     }
-    //     const response = await cds.ql.SELECT.one.from("Requests").where({ ID: data.ID });
+        const offDays = getAllDaysBetween(new Date(data.startDay), new Date(data.endDay));
+        if (offDays.length > user.dayOffThisYear + user.dayOffLastYear) {
+            await cds.ql
+                .UPDATE("Requests")
+                .where({ ID:data.ID })
+                .set({ ...data, isOutOfDay: true, user_ID: data.user_ID });
+        } else {
+            await cds.ql
+                .UPDATE("Requests")
+                .where({ ID: data.ID })
+                .set({ ...data,  isOutOfDay: false,user_ID:data.user_ID });
+        }
+        const response = await cds.ql.SELECT.one.from("Requests").where({ ID: data.ID });
 
-    //     await notify({ data: response, authentication }, "update");
-    //     return req.reply({ code: 200, message: "Update successfully", data: req.reply });
-    // }
+        await notify({ data: response, authentication }, "update");
+        return req.reply({ code: 200, message: "Update successfully", data: req.reply });
+    }
 
     @BeforeDelete()
     public async validRequest(@Req() req: any): Promise<any> {
