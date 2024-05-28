@@ -37,6 +37,9 @@ export class RequestManageService {
                 col.endDay,
                 col.status,
                 col.isOutOfDay,
+                col.dayOffType
+                col.shift
+                col.comment
                 col.user(user => {
                     user.ID, user.department_id, user.fullName, user.username;
                 });
@@ -46,7 +49,7 @@ export class RequestManageService {
         }
         const requests = await query;
 
-        const data = requests.filter(request => request.user?.department_id === authentication.department);
+        const data = requests.filter(request => request.user?.department_id === authentication.department  && request.status !=="removed");
 
         return req.reply(data);
     }
