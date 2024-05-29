@@ -301,49 +301,22 @@ export namespace epl.EmployeeService {
 }
 
 export namespace HrManagerService {
-    export interface IUsers {
-        ID: string;
+    export interface IDepartments {
         createdAt?: Date;
         createdBy?: string;
         modifiedAt?: Date;
         modifiedBy?: string;
-        username: string;
-        password: string;
-        fullName: string;
-        status?: boolean;
-        address: string;
-        role?: vacation.Role;
-        refreshToken: string;
-        dayOffThisYear?: number;
-        dayOffLastYear?: number;
-        requests?: IRequests[];
-        department?: vacation.IDepartments;
-        department_id?: number;
+        id: number;
+        departmentName: string;
+        isHRDepartment?: boolean;
+        members?: vacation.IUsers[];
+        isActive?: boolean;
     }
 
-    export enum RequestsDayOffType {
+    export enum UserRequestsDayOffType {
         FULL_DAY,
         HALF_DAY,
         PERIOD_TIME,
-    }
-
-    export interface IRequests {
-        ID: string;
-        createdAt?: Date;
-        createdBy?: string;
-        modifiedAt?: Date;
-        modifiedBy?: string;
-        status?: vacation.Status;
-        reason: string;
-        user?: IUsers;
-        user_ID?: string;
-        startDay: Date;
-        endDay: Date;
-        dayOffType: RequestsDayOffType;
-        shift?: vacation.Shift;
-        isOutOfDay?: boolean;
-        comment?: string;
-        notification?: vacation.INotifications;
     }
 
     export interface IUserRequests {
@@ -359,6 +332,9 @@ export namespace HrManagerService {
         endDay: Date;
         reason: string;
         comment?: string;
+        dayOffType: UserRequestsDayOffType;
+        shift?: vacation.Shift;
+        isOutOfDay?: boolean;
     }
 
     export enum FuncExportExcel {
@@ -368,14 +344,12 @@ export namespace HrManagerService {
     export type FuncExportExcelReturn = string;
 
     export enum Entity {
-        Users = "HrManagerService.Users",
-        Requests = "HrManagerService.Requests",
+        Departments = "HrManagerService.Departments",
         UserRequests = "HrManagerService.UserRequests",
     }
 
     export enum SanitizedEntity {
-        Users = "Users",
-        Requests = "Requests",
+        Departments = "Departments",
         UserRequests = "UserRequests",
     }
 }

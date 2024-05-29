@@ -1,8 +1,8 @@
 import cds from '@sap/cds';
 import { Handler, Req, Param, Action, Func, Use } from "cds-routing-handlers";
-import {HrManagerService,mng} from "../../entities";
+import {HrManagerService,mng} from "../entities";
 import * as ExcelJS from 'exceljs';
-import {getAllDaysBetween, removeHolidays,filterDaysInCurrentMonth} from "../../helpers/leaveDayCalculation";
+import {getAllDaysBetween, removeHolidays,filterDaysInCurrentMonth} from "../helpers/leaveDayCalculation";
 @Handler()
 export class HrManagerFunctionHandler {
     @Func(HrManagerService.FuncExportExcel.name)

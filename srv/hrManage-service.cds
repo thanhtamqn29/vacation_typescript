@@ -1,8 +1,7 @@
 using { vacation as my } from '../db/schema';
 
 service HrManagerService @(path: '/manage/manageHr') {
-  entity Users as projection on my.Users;
-  entity Requests as projection on my.Requests;
+  entity  Departments as projection on  my.Departments;
   entity UserRequests as
     select from my.Requests as r
     left outer join my.Users as u
@@ -19,7 +18,10 @@ service HrManagerService @(path: '/manage/manageHr') {
           r.startDay,
           r.endDay,   
           r.reason,
-          r.comment
+          r.comment,
+          r.dayOffType,
+          r.shift,
+          r.isOutOfDay,
     };
   function exportExcel () returns String;
 }
