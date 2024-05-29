@@ -6,31 +6,45 @@ import cors from "cors";
 import { HandleMiddleware } from "./middlewares/handler.middleware";
 
 export const application = async () => {
+ 
     const app = express();
     const publicPath = ["pbl"];
-    app.use(cors({ credentials: true, origin: "http://localhost:8080" }));
+    app.use(cors({ credentials: true, origin: "*" }));
 
-    await cds.connect("db");
-    await cds
-        .serve("all")
-        .in(app)
-        .with((srv: any) => {
-            const service = srv.name.split(".");
 
-            if (publicPath.includes(service[0])) {
-                const hdl = createCombinedHandler({
+
+    try {
+
+        await cds.connect.to("db");
+
+        
+        await cds
+            .serve("all")
+            .in(app)
+            .with((srv: any) => {
+                const service = srv.name.split(".");
+
+                const handlerConfig = {
                     handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],
-                });
+                    middlewares: [],
+                };
+
+                if (!publicPath.includes(service[0])) {
+                    handlerConfig.middlewares = [HandleMiddleware];
+                }
+
+                const hdl = createCombinedHandler(handlerConfig);
                 return hdl(srv);
-            } else {
-                const hdl = createCombinedHandler({
-                    middlewares: [HandleMiddleware],
-                    handler: [__dirname + "/entities/**/*.js", __dirname + "/functions/**/*.js"],
-                });
-                return hdl(srv);
-            }
-            // hdl(srv)
-        });
+            });
+    } catch (err) {
+        console.error("Failed to connect to HANA database or serve CAP services", err);
+        process.exit(1);
+    }
+
+    app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        console.error("Unhandled error:", err);
+        res.status(500).send({ error: err });
+    });
 
     return app;
 };

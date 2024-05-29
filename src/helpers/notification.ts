@@ -3,7 +3,7 @@ export const notify = async (response: any, action: string) => {
  
     const getUser = await cds.ql.SELECT.one.from("Users").where({ ID: authentication.ID });
 
-    const getManager = await SELECT.one.from("Users").where({ department_id: getUser.department_id, role: "manager" });
+    const getManager = await cds.ql.SELECT.one.from("Users").where({ department_id: getUser.department_id, role: "manager" });
     let notify: any;
     if (action === "accepted" || action === "rejected") {
         notify = responseMessage(getManager.fullName, action, "");
@@ -22,7 +22,6 @@ export const notify = async (response: any, action: string) => {
             message: notify,
             request_ID: data.ID,
         });
-        console.log("success");
         
     }
 };

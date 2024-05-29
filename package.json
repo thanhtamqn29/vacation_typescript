@@ -1,9 +1,12 @@
 {
-  "name": "cap-bookshop-typescript",
+  "name": "vacation",
   "version": "1.0.0",
-  "description": "A simple self-contained bookshop service.",
+  "description": "",
   "dependencies": {
-    "@sap/cds": "^5.1.5",
+    "@sap/cds": "^5.9.5",
+    "@sap/cds-dk": "^6.8.0",
+    "@sap/cds-mtx": "^2.6.7",
+    "@sap/cds-mtxs": "^1",
     "@sap/xsenv": "^5.1.0",
     "@sap/xssec": "^3.6.1",
     "bcryptjs": "^2.4.3",
@@ -12,6 +15,7 @@
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",
     "express": "^4.17.1",
+    "hdb": "^0.19.0",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",
     "passport": "^0.7.0",
@@ -31,18 +35,22 @@
   },
   "scripts": {
     "start": "node ./srv/server.js",
-    "dev": "npm run build:cds && nodemon",
-    "deploy": "cds deploy --to sqlite:vacation.db",
+    "dev": "npm run build:cds && npx nodemon",
+    "deploy": "cds deploy --to hana:vacation-db",
     "build": "npm run build:cds && npm run build:ts",
     "build:cds": "echo 'Compiling cds sources...' && cds2types --cds srv --output ./src/entities.ts --prefix I -f -d && cds build && cp .cdsrc.json gen/srv",
     "build:ts": "echo 'Compiling *.ts sources...' && tsc"
   },
+  "engines": {
+    "node": "^18"
+  },
   "cds": {
     "requires": {
       "db": {
-        "kind": "sqlite",
-        "credentials": {
-          "database": "vacation.db"
+        "kind": "hana",
+        "model": "db",
+        "pool": {
+          "acquireTimeoutMillis": 30000
         }
       }
     }

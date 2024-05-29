@@ -1,23 +1,26 @@
 import * as jwt from "jsonwebtoken";
-import * as env from "dotenv";
 import {pbl } from "../entities";
 
-env.configDotenv();
-const accessTokenKey = process.env.ACCESS_TOKEN;
-const refreshTokenKey = process.env.REFRESH_TOKEN;
 
-const generateAccessToken = (user: pbl.PublicService.IPblUsers) => {
+
+
+
+const generateAccessToken = async (user: pbl.PublicService.IPblUsers) => {
+const accessTokenKey = await global.serverEnv?.accessToken;
+
     return jwt.sign(
         {
             id: user.ID,
             role: user.role,
         },
         accessTokenKey,
-        { expiresIn: "30m" }
+        { expiresIn: "1h" }
     );
 };
 
-const generateRefreshToken = (user: pbl.PublicService.IPblUsers) => {
+const generateRefreshToken = async  (user: pbl.PublicService.IPblUsers) => {
+const refreshTokenKey = await global.serverEnv?.refreshToken;
+
     return jwt.sign(
         {
             id: user.ID,
@@ -28,17 +31,22 @@ const generateRefreshToken = (user: pbl.PublicService.IPblUsers) => {
     );
 };
 
-const verifyAccessToken = (token: string) => {
+const verifyAccessToken = async (token: string) => {
+const accessTokenKey = await global.serverEnv?.accessToken;
+
     if (!token) return;
     try {
         const decoded = jwt.verify(token, accessTokenKey);
+
         return decoded;
     } catch (err) {
         const decoded: any = jwt.decode(token);
         return decoded ? { id: decoded.id } : null;
     }
 };
-const verifyRefreshToken = (token: string) => {
+const verifyRefreshToken = async(token: string) => {
+const refreshTokenKey = await global.serverEnv?.refreshToken;
+
     if (!token) return;
     try {
         const decoded = jwt.verify(token, refreshTokenKey);

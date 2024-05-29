@@ -6,27 +6,24 @@
             { "for": "node-cf", "src": "srv", "options": { "model": ["db", "srv"] } }
         ]
     },
-    "[production]": {
-        "requires": {
-            "db": {
-                "kind": "hana",
-                "model": ["db", "srv"]
-            },
-            "uaa": {
-                "kind": "xsuaa"
-            }
-        }
-    },
-    "requires": {
+    "require": {
         "db": {
-            "kind": "sqlite",
-            "credentials": {
-                "database": "vacation.db"
+            "binding": {
+                "type": "cf",
+                "apiEndpoint": "https://api.cf.us10-001.hana.ondemand.com",
+                "org": "7df335f7trial_7df335f7trial",
+                "space": "leaveDay",
+                "instance": "vacation-db",
+                "key": "vacation-db-key",
+                "resolved": false
+            },
+            "kind": "hana",
+            "vcap": {
+                "name": "db"
             }
         }
     },
-    "odata": {
-        "version": "v4"
-    },
-    "auth": "ias"
+    "hana": {
+        "deploy-format": "hdbtable"
+    }
 }
