@@ -36,7 +36,7 @@
   "scripts": {
     "start": "node ./srv/server.js",
     "dev": "npm run build:cds && npx nodemon",
-    "deploy": "cds deploy --to hana:vacation-db",
+    "deploy": "cds deploy --to sqlite:vacation.db",
     "build": "npm run build:cds && npm run build:ts",
     "build:cds": "echo 'Compiling cds sources...' && cds2types --cds srv --output ./src/entities.ts --prefix I -f -d && cds build && cp .cdsrc.json gen/srv",
     "build:ts": "echo 'Compiling *.ts sources...' && tsc"
@@ -47,10 +47,10 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "hana",
-        "model": "db",
-        "pool": {
-          "acquireTimeoutMillis": 30000
+        "kind": "sqlite",
+        "model":"db",
+        "credentials": {
+          "database": "vacation.db"
         }
       }
     }
