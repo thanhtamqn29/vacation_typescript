@@ -12,6 +12,7 @@ const accessTokenKey = await global.serverEnv?.accessToken;
         {
             id: user.ID,
             role: user.role,
+            department_id:user.department_id,
         },
         accessTokenKey,
         { expiresIn: "1h" }
@@ -25,6 +26,7 @@ const refreshTokenKey = await global.serverEnv?.refreshToken;
         {
             id: user.ID,
             role: user.role,
+            department_id:user.department_id,
         },
         refreshTokenKey,
         { expiresIn: "30d" }

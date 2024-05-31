@@ -3,8 +3,7 @@ import { verifyAccessToken } from "../helpers/jwt";
 @Middleware()
 export class HandleMiddleware implements ICdsMiddleware {
     public async use(@Req() req: any, @Jwt() jwt: string): Promise<any> {
-        const decoded: any = await verifyAccessToken(jwt);
-
+        const decoded: any = await verifyAccessToken(jwt);    
         if (!decoded) {
             return req.error(400, "Couldn't find your token!", "");
         }
@@ -32,10 +31,10 @@ export class HandleMiddleware implements ICdsMiddleware {
         const method = req.method;
         if (service && service[1] === "manage") {
             await this.checkRoleForManagePath(req, service);
-        }
+        };
 
         await this.checkPendingRequest(req, service, method);
-    }
+    };
 
     private checkRoleForManagePath = async (req: any, service: Array<String>) => {
         if (req.authentication.role !== "manager") {
