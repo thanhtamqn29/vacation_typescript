@@ -18,7 +18,8 @@ export class PublicAction {
             username: username,
         });
 
-
+        console.log(user);
+        
         
         if (!user || user.length !== 1) return req.error(401, "Invalid username or password", "");
         if (!user[0].status) return req.error(400, "Perhaps you are not allow to access to our system, contact admin about this issue!", "");
