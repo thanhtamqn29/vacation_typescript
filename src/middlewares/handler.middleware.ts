@@ -1,6 +1,5 @@
 import { ICdsMiddleware, Req, Jwt, Middleware } from "cds-routing-handlers";
 import { verifyAccessToken } from "../helpers/jwt";
-import { vacation } from "../entities";
 @Middleware()
 export class HandleMiddleware implements ICdsMiddleware {
     public async use(@Req() req: any, @Jwt() jwt: string): Promise<any> {
