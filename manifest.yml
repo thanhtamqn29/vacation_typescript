@@ -9,7 +9,7 @@ applications:
 # -----------------------------------------------------------------------------------
 - name: vacation-srv
   random-route: true  # for development only
-  path: ./
+  path: .
   memory: 256M
   buildpack: nodejs_buildpack
   services:
