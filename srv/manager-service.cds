@@ -3,10 +3,10 @@ namespace mng;
 using vacation from '../db/schema';
 
 
-service ManagerService @(path: '/manage') {
-    entity MngUsers         as projection on vacation.Users;
+service ManagerService @(path : '/manage') {
 
-    @(Capabilites: {
+    entity MngUsers         as projection on vacation.Users;
+      @(Capabilites : {
         Insertable,
         Updateable
     })
@@ -17,4 +17,5 @@ service ManagerService @(path: '/manage') {
     entity MngNotifications as projection on vacation.Notifications;
     action invite(ids : array of String)             returns String;
     action createDepartment(departmentName : String) returns String;
+    function getNoDepartmentUser() returns String;
 };

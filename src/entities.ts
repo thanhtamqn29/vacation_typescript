@@ -461,6 +461,12 @@ export namespace mng.ManagerService {
 
     export type ActionCreateDepartmentReturn = string;
 
+    export enum FuncGetNoDepartmentUser {
+        name = "getNoDepartmentUser",
+    }
+
+    export type FuncGetNoDepartmentUserReturn = string;
+
     export enum Entity {
         MngUsers = "mng.ManagerService.MngUsers",
         MngCalendar = "mng.ManagerService.MngCalendar",
