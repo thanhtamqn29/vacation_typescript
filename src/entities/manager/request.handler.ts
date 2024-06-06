@@ -31,25 +31,20 @@ export class RequestManageService {
     public async updateRequest(@Req() req: any) {
         const { authentication } = req;
         const query = SELECT.from("Requests").columns(col => {
-            col.ID,
-                col.reason,
-                col.startDay,
-                col.endDay,
-                col.status,
-                col.isOutOfDay,
-                col.dayOffType
-                col.shift
-                col.comment
-                col.user(user => {
-                    user.ID, user.department_id, user.fullName, user.username;
-                });
+            col.ID, col.reason, col.startDay, col.endDay, col.status, col.isOutOfDay, col.dayOffType;
+            col.shift;
+            col.comment;
+            col.user(user => {
+                user.ID, user.department_id, user.fullName, user.username;
+            });
         });
         if (req.params.length > 0) {
             query.where({ ID: req.params[0] });
         }
         const requests = await query;
+        console.log(requests);
 
-        const data = requests.filter(request => request.user?.department_id === authentication.department  && request.status !=="removed");
+        const data = requests.filter(request => request.user?.department_id === authentication.department && request.status !== "removed");
 
         return req.reply(data);
     }
@@ -72,8 +67,7 @@ export class RequestManageService {
         await notify({ data, authentication }, data.status);
         req.reply({
             message: `You have ${data.status} ${data.user.fullName} request!!`,
-            data: data
+            data: data,
         });
-        
     }
 }

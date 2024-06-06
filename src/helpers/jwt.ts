@@ -5,7 +5,7 @@ import {pbl } from "../entities";
 
 
 
-const generateAccessToken = async (user: pbl.PublicService.IPblUsers) => {
+const generateAccessToken = async (user) => {
 const accessTokenKey = await global.serverEnv?.accessToken;
 
     return jwt.sign(
@@ -19,7 +19,7 @@ const accessTokenKey = await global.serverEnv?.accessToken;
     );
 };
 
-const generateRefreshToken = async  (user: pbl.PublicService.IPblUsers) => {
+const generateRefreshToken = async  (user) => {
 const refreshTokenKey = await global.serverEnv?.refreshToken;
 
     return jwt.sign(

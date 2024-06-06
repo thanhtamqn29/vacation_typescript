@@ -1,3 +1,4 @@
 node_modules
 gen
 default-env.json
+package-lock.json

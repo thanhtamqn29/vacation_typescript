@@ -5,7 +5,7 @@ using {
     managed
 } from '@sap/cds/common';
 
-type Role   : String enum {
+type Role : String enum {
     staff;
     manager;
 }
@@ -18,25 +18,26 @@ type Status : String enum {
     removed;
 }
 
-type Shift  : String enum {
+type Shift : String enum {
     M;
     A;
 }
 
-@assert.unique: {username: [username]}
-entity Users : cuid, managed {
-    username       : String;
-    password       : String;
-    fullName       : String;
-    status         : Boolean default true;
-    address        : String;
-    role           : Role default 'staff';
-    refreshToken   : String;
-    dayOffThisYear : Decimal(10, 2) default 1.25;
-    dayOffLastYear : Decimal(10, 2) default 0;
-    requests       : Association to many Requests
-                         on requests.user = $self;
-    department     : Association to one Departments;
+@assert.unique : {username : [username]}
+entity Users : managed {
+    key ID             : String;
+        username       : String;
+        password       : String;
+        fullName       : String;
+        status         : Boolean default true;
+        address        : String;
+        role           : Role default 'staff';
+        refreshToken   : String;
+        dayOffThisYear : Decimal(10, 2) default 1.25;
+        dayOffLastYear : Decimal(10, 2) default 0;
+        requests       : Association to many Requests
+                             on requests.user = $self;
+        department     : Association to one Departments;
 }
 
 entity Requests : cuid, managed {
@@ -45,7 +46,11 @@ entity Requests : cuid, managed {
     user         : Association to Users;
     startDay     : Date;
     endDay       : Date;
-    dayOffType   : String enum {FULL_DAY; HALF_DAY; PERIOD_TIME};
+    dayOffType   : String enum {
+        FULL_DAY;
+        HALF_DAY;
+        PERIOD_TIME
+    };
     shift        : Shift default null;
     isOutOfDay   : Boolean default false;
     comment      : String default '';
