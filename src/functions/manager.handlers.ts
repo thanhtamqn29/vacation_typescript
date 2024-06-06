@@ -1,4 +1,4 @@
-import { Action, Handler, Param, Req, Use } from "cds-routing-handlers";
+import { Action, Func, Handler, Param, Req, Use } from "cds-routing-handlers";
 import { mng } from "../entities";
 import { HandleMiddleware } from "../middlewares/handler.middleware";
 
@@ -66,5 +66,15 @@ export class ManagerHandle {
         }
 
         return req.reply({ code: 200, message: responseMessage.trim() });
+    }
+
+    @Func(mng.ManagerService.FuncGetNoDepartmentUser.name)
+    public async getNoDepartmentUser(@Req() req: any) {
+        const users = await cds.ql.SELECT.from("Users").where({ department_id: null });
+        return (req.results = {
+            code: 200,
+            message: "successfully",
+            data: users,
+        });
     }
 }
