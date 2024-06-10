@@ -1,5 +1,5 @@
-import { AfterCreate, AfterRead, BeforeCreate, BeforeRead, Handler, OnCreate, OnRead, OnReject, Req, Use } from "cds-routing-handlers";
-import { HrManagerService, mng } from "../../entities";
+import { AfterRead, Handler, Req, Use } from "cds-routing-handlers";
+import { HrManagerService } from "../../entities";
 import { HandleMiddleware } from "../../middlewares/handler.middleware";
 
 @Handler(HrManagerService.SanitizedEntity.UserRequests)

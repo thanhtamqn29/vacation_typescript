@@ -1,5 +1,4 @@
 import * as jwt from "jsonwebtoken";
-import { pbl } from "../entities";
 
 const generateAccessToken = async user => {
     const accessTokenKey = await global.serverEnv?.accessToken;

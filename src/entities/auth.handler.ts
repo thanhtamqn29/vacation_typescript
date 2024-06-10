@@ -1,4 +1,4 @@
-import { AfterRead, BeforeRead, Handler, OnRead, Req, Use } from "cds-routing-handlers";
+import { Handler, OnRead, Req, Use } from "cds-routing-handlers";
 import { auth } from "../entities";
 import { HandleMiddleware } from "../middlewares/handler.middleware";
 

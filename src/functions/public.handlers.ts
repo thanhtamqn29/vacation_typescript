@@ -1,6 +1,5 @@
 import { Action, Handler, Param, Req } from "cds-routing-handlers";
-import { pbl, vacation } from "../entities";
-import * as bcrypt from "bcryptjs";
+import { pbl } from "../entities";
 import cds from "@sap/cds";
 import { generateAccessToken, generateRefreshToken } from "../helpers/jwt";
 
