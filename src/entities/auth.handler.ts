@@ -21,7 +21,7 @@ export class AuthHandlers {
                 col.isHRDepartment;
             })
             .where({ id: user.department_id });
-        const results = {role: user.role, department_id: department.isHRDepartment };
+        const results = { role: user.role, department_id: department.isHRDepartment };
         req.results = results;
     }
 }

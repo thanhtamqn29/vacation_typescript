@@ -36,7 +36,7 @@ export class HandleMiddleware implements ICdsMiddleware {
         }
 
         await this.checkPendingRequest(req, service, method);
-    };
+    }
 
     private checkRoleForManagePath = async (req: any, service: Array<String>) => {
         if (req.authentication.role !== "manager") {

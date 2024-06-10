@@ -46,7 +46,7 @@ export class HrManagerFunctionHandler {
                 user_ID: user.ID,
                 status: "accepted",
             });
-            
+
             const filteredRequests = userRequestsThisMonth.filter(request => {
                 const startDate = new Date(request.startDay);
                 const endDate = new Date(request.endDay);

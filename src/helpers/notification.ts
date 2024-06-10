@@ -2,7 +2,7 @@ export const notify = async (response: any, action: string) => {
     const { data, authentication } = response;
     console.log(data);
 
-    const receiver = await cds.ql.SELECT.one.from("Users").where({ID: data.user_ID});
+    const receiver = await cds.ql.SELECT.one.from("Users").where({ ID: data.user_ID });
 
     const getUser = await cds.ql.SELECT.one.from("Users").where({ ID: authentication.ID });
 
@@ -18,7 +18,6 @@ export const notify = async (response: any, action: string) => {
         });
     }
     if (action === "created" || action === "updated" || action === "deleted") {
-
         notify = responseMessage(getUser.fullName, action, data.reason);
         await cds.ql.INSERT.into("Notifications").entries({
             sender_ID: authentication.ID,
@@ -26,7 +25,6 @@ export const notify = async (response: any, action: string) => {
             message: notify,
             request_ID: data.ID,
         });
-        
     }
 };
 

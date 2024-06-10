@@ -8,8 +8,6 @@ import { generateAccessToken, generateRefreshToken } from "../helpers/jwt";
 export class PublicAction {
     @Action(pbl.PublicService.ActionCheckingIASId.name)
     public async checkingIAS(@Param(pbl.PublicService.ActionCheckingIASId.paramData) data: any, @Req() req: any): Promise<any> {
-
-        
         const user = await cds.ql.SELECT.one.from("Users").where({
             ID: data.name,
         });
@@ -34,7 +32,7 @@ export class PublicAction {
         if (!updatedUser) {
             return req.error(500, "Failed to update the user's token.", "");
         }
-        
+
         return req.reply({
             code: 200,
             accessToken: accessToken,

@@ -1,32 +1,28 @@
 import * as jwt from "jsonwebtoken";
-import {pbl } from "../entities";
+import { pbl } from "../entities";
 
-
-
-
-
-const generateAccessToken = async (user) => {
-const accessTokenKey = await global.serverEnv?.accessToken;
+const generateAccessToken = async user => {
+    const accessTokenKey = await global.serverEnv?.accessToken;
 
     return jwt.sign(
         {
             id: user.ID,
             role: user.role,
-            department_id:user.department_id,
+            department_id: user.department_id,
         },
         accessTokenKey,
         { expiresIn: "1h" }
     );
 };
 
-const generateRefreshToken = async  (user) => {
-const refreshTokenKey = await global.serverEnv?.refreshToken;
+const generateRefreshToken = async user => {
+    const refreshTokenKey = await global.serverEnv?.refreshToken;
 
     return jwt.sign(
         {
             id: user.ID,
             role: user.role,
-            department_id:user.department_id,
+            department_id: user.department_id,
         },
         refreshTokenKey,
         { expiresIn: "30d" }
@@ -34,7 +30,7 @@ const refreshTokenKey = await global.serverEnv?.refreshToken;
 };
 
 const verifyAccessToken = async (token: string) => {
-const accessTokenKey = await global.serverEnv?.accessToken;
+    const accessTokenKey = await global.serverEnv?.accessToken;
 
     if (!token) return;
     try {
@@ -46,8 +42,8 @@ const accessTokenKey = await global.serverEnv?.accessToken;
         return decoded ? { id: decoded.id } : null;
     }
 };
-const verifyRefreshToken = async(token: string) => {
-const refreshTokenKey = await global.serverEnv?.refreshToken;
+const verifyRefreshToken = async (token: string) => {
+    const refreshTokenKey = await global.serverEnv?.refreshToken;
 
     if (!token) return;
     try {

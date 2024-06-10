@@ -8,7 +8,7 @@ export class ManagerHandle {
     @Action(mng.ManagerService.ActionCreateDepartment.name)
     public async createDepartment(@Param(mng.ManagerService.ActionCreateDepartment.paramDepartmentName) departmentName: string, @Req() req: any) {
         const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.authentication.ID });
-        
+
         if (user.department_id) return req.error(400, "You already have a department", "");
 
         const departments = await cds.ql.SELECT("Departments");

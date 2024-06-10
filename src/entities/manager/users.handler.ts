@@ -5,10 +5,8 @@ import { mng } from "../../entities";
 @Handler(mng.ManagerService.SanitizedEntity.MngUsers)
 @Use(HandleMiddleware)
 export class ManageDepartmentService {
-
-    
     @AfterRead()
-    public async userManagerResponse(@Req() req: any) { 
-        return (req.results = req.results.filter( user=> user.department_id === req.authentication.department));
+    public async userManagerResponse(@Req() req: any) {
+        return (req.results = req.results.filter(user => user.department_id === req.authentication.department));
     }
 }
