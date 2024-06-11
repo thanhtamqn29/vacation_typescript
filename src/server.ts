@@ -18,9 +18,6 @@ export class Server {
             cron.schedule("59 59 23 * * *", async () => {
                 await systemRunner();
             });
-            cron.schedule("0 0 0 * * *", async () => {
-                await executeDecreaseLeaveDay();
-            });
             console.info(`Server is listing at http://localhost:${port}`);
         });
     }
