@@ -146,7 +146,7 @@ export class RequestManageService {
                     }
                 }
             }
-            await cds.ql.UPDATE("Request").set({ status: "approved" }).where({ user_ID: req.params[0] });
+            await cds.ql.UPDATE("Requests").set({ status: "approved" }).where({ user_ID: req.params[0] });
         }
 
         await notify({ data, authentication }, data.status);
