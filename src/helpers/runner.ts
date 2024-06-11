@@ -36,16 +36,7 @@ export const systemRunner = async () => {
             }
         });
 
-        // Execute decrease leave day on the first day of every month
-        cron.schedule("0 0 0 1 * *", async () => {
-            try {
-                console.log("Running executeDecreaseLeaveDay job");
-                await executeDecreaseLeaveDay();
-                console.log("Completed executeDecreaseLeaveDay job");
-            } catch (error) {
-                console.error("Error in executeDecreaseLeaveDay job:", error);
-            }
-        });
+     
     } catch (error) {
         console.error("Error scheduling tasks:", error);
     }
