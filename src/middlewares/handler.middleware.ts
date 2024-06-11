@@ -1,17 +1,16 @@
 import { ICdsMiddleware, Req, Jwt, Middleware } from "cds-routing-handlers";
 import { verifyAccessToken } from "../helpers/jwt";
-import { vacation } from "../entities";
 @Middleware()
 export class HandleMiddleware implements ICdsMiddleware {
     public async use(@Req() req: any, @Jwt() jwt: string): Promise<any> {
-        const decoded: any = await verifyAccessToken(jwt);    
+        const decoded: any = await verifyAccessToken(jwt);
         if (!decoded) {
             return req.error(400, "Couldn't find your token!", "");
         }
         if (!decoded.exp) return req.error(403, "Your token is expired");
-        
+
         const [user] = await cds.ql.SELECT.from("Users").where({ ID: decoded.id });
-        
+
         if (!user || user.length === 0) {
             return req.error(404, "User not found!", "");
         }
@@ -19,7 +18,7 @@ export class HandleMiddleware implements ICdsMiddleware {
         if (user.length > 1) {
             return req.error(400, "Something went wrong!", "");
         }
-        if (user.role === "staff" && !user.department_id) return req.error(400, "You are not in the department");
+        if (!user.department_id) return req.error(400, "You are not in the department, contact to your manager and request to join a department!");
 
         req.authentication = {
             ID: decoded.id,
@@ -31,20 +30,22 @@ export class HandleMiddleware implements ICdsMiddleware {
 
         const method = req.method;
         if (service && service[1] === "manage") {
-            await this.checkRoleForManagePath(req, service);
-        };
+            if (service[2] !== "manageHr") {
+                await this.checkRoleForManagePath(req, service);
+            }
+        }
 
         await this.checkPendingRequest(req, service, method);
-    };
+    }
 
     private checkRoleForManagePath = async (req: any, service: Array<String>) => {
         if (req.authentication.role !== "manager") {
             return req.error(402, "You're not the manager", "");
         }
-        
+
         if (service[2] === "Departments" && req.method === "POST") {
             const user = await SELECT.one.from("Users").where({ ID: req.authentication.ID });
-            
+
             if (user.department_id) {
                 return req.error(402, "You're already in a department!", "");
             }
@@ -53,7 +54,6 @@ export class HandleMiddleware implements ICdsMiddleware {
 
     private checkPendingRequest = async (req: any, service: Array<string>, method: string) => {
         if (service[2] === "EplRequests" && method === "POST") {
-
             const requests = await cds.ql.SELECT("Requests").where({ user_ID: req.authentication.ID });
 
             for (const request of requests) {

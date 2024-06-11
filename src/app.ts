@@ -6,18 +6,13 @@ import cors from "cors";
 import { HandleMiddleware } from "./middlewares/handler.middleware";
 
 export const application = async () => {
- 
     const app = express();
     const publicPath = ["pbl"];
     app.use(cors({ credentials: true, origin: "*" }));
 
-
-
     try {
-
         await cds.connect.to("db");
 
-        
         await cds
             .serve("all")
             .in(app)

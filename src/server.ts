@@ -18,8 +18,15 @@ export class Server {
             cron.schedule("59 59 23 * * *", async () => {
                 await systemRunner();
             });
-            cron.schedule("0 0 0 * * *", async () => {
-                await executeDecreaseLeaveDay();
+            // Execute decrease leave day on the first day of every month
+            cron.schedule("1 0 0 1 * *", async () => {
+                try {
+                    console.log("Running executeDecreaseLeaveDay job");
+                    await executeDecreaseLeaveDay();
+                    console.log("Completed executeDecreaseLeaveDay job");
+                } catch (error) {
+                    console.error("Error in executeDecreaseLeaveDay job:", error);
+                }
             });
             console.info(`Server is listing at http://localhost:${port}`);
         });

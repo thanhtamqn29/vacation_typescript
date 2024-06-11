@@ -1,4 +1,4 @@
-import { Action, Handler, Param, Req, Use } from "cds-routing-handlers";
+import { Action, Func, Handler, Param, Req, Use } from "cds-routing-handlers";
 import { mng } from "../entities";
 import { HandleMiddleware } from "../middlewares/handler.middleware";
 
@@ -8,7 +8,7 @@ export class ManagerHandle {
     @Action(mng.ManagerService.ActionCreateDepartment.name)
     public async createDepartment(@Param(mng.ManagerService.ActionCreateDepartment.paramDepartmentName) departmentName: string, @Req() req: any) {
         const user = await cds.ql.SELECT.one.from("Users").where({ ID: req.authentication.ID });
-        
+
         if (user.department_id) return req.error(400, "You already have a department", "");
 
         const departments = await cds.ql.SELECT("Departments");
@@ -66,5 +66,15 @@ export class ManagerHandle {
         }
 
         return req.reply({ code: 200, message: responseMessage.trim() });
+    }
+
+    @Func(mng.ManagerService.FuncGetNoDepartmentUser.name)
+    public async getNoDepartmentUser(@Req() req: any) {
+        const users = await cds.ql.SELECT.from("Users").where({ department_id: null });
+        return (req.results = {
+            code: 200,
+            message: "successfully",
+            data: users,
+        });
     }
 }

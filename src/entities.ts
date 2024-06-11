@@ -1,3 +1,22 @@
+export namespace pbl {
+    export interface IIasID {
+        displayName: string;
+        email: string;
+        firstname: string;
+        lastname: string;
+        name: string;
+        scopes: string;
+    }
+
+    export enum Entity {
+        IasID = "pbl.iasID",
+    }
+
+    export enum SanitizedEntity {
+        IasID = "IasID",
+    }
+}
+
 export namespace vacation {
     export enum Role {
         staff,
@@ -18,11 +37,11 @@ export namespace vacation {
     }
 
     export interface IUsers {
-        ID: string;
         createdAt?: Date;
         createdBy?: string;
         modifiedAt?: Date;
         modifiedBy?: string;
+        ID: string;
         username: string;
         password: string;
         fullName: string;
@@ -181,6 +200,38 @@ export namespace sap.common {
 }
 
 export namespace auth.AuthService {
+    export interface IUsers {
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        ID: string;
+        username: string;
+        password: string;
+        fullName: string;
+        status?: boolean;
+        address: string;
+        role?: vacation.Role;
+        refreshToken: string;
+        dayOffThisYear?: number;
+        dayOffLastYear?: number;
+        requests?: vacation.IRequests[];
+        department?: IDepartments;
+        department_id?: number;
+    }
+
+    export interface IDepartments {
+        createdAt?: Date;
+        createdBy?: string;
+        modifiedAt?: Date;
+        modifiedBy?: string;
+        id: number;
+        departmentName: string;
+        isHRDepartment?: boolean;
+        members?: IUsers[];
+        isActive?: boolean;
+    }
+
     export enum FuncRefresh {
         name = "refresh",
     }
@@ -193,18 +244,24 @@ export namespace auth.AuthService {
 
     export type FuncLogoutReturn = string;
 
-    export enum Entity {}
+    export enum Entity {
+        Users = "auth.AuthService.Users",
+        Departments = "auth.AuthService.Departments",
+    }
 
-    export enum SanitizedEntity {}
+    export enum SanitizedEntity {
+        Users = "Users",
+        Departments = "Departments",
+    }
 }
 
 export namespace epl.EmployeeService {
     export interface IEplUsers {
-        ID: string;
         createdAt?: Date;
         createdBy?: string;
         modifiedAt?: Date;
         modifiedBy?: string;
+        ID: string;
         username: string;
         password: string;
         fullName: string;
@@ -323,7 +380,7 @@ export namespace HrManagerService {
         request_ID: string;
         request_status?: vacation.Status;
         user_ID: string;
-        username: string;
+        fullName: string;
         role?: vacation.Role;
         id: number;
         departmentName: string;
@@ -356,11 +413,11 @@ export namespace HrManagerService {
 
 export namespace mng.ManagerService {
     export interface IMngUsers {
-        ID: string;
         createdAt?: Date;
         createdBy?: string;
         modifiedAt?: Date;
         modifiedBy?: string;
+        ID: string;
         username: string;
         password: string;
         fullName: string;
@@ -461,6 +518,12 @@ export namespace mng.ManagerService {
 
     export type ActionCreateDepartmentReturn = string;
 
+    export enum FuncGetNoDepartmentUser {
+        name = "getNoDepartmentUser",
+    }
+
+    export type FuncGetNoDepartmentUserReturn = string;
+
     export enum Entity {
         MngUsers = "mng.ManagerService.MngUsers",
         MngCalendar = "mng.ManagerService.MngCalendar",
@@ -479,46 +542,20 @@ export namespace mng.ManagerService {
 }
 
 export namespace pbl.PublicService {
-    export interface IPblUsers {
-        ID: string;
-        createdAt?: Date;
-        createdBy?: string;
-        modifiedAt?: Date;
-        modifiedBy?: string;
-        username: string;
-        password: string;
-        fullName: string;
-        status?: boolean;
-        address: string;
-        role?: vacation.Role;
-        refreshToken: string;
-        dayOffThisYear?: number;
-        dayOffLastYear?: number;
-        requests?: vacation.IRequests[];
-        department?: vacation.IDepartments;
-        department_id?: number;
+    export enum ActionCheckingIASId {
+        name = "checkingIASId",
+        paramData = "data",
     }
 
-    export enum ActionLogin {
-        name = "login",
-        paramUsername = "username",
-        paramPassword = "password",
+    export interface IActionCheckingIASIdParams {
+        data: pbl.IIasID;
     }
 
-    export interface IActionLoginParams {
-        username: string;
-        password: string;
-    }
+    export type ActionCheckingIASIdReturn = string;
 
-    export type ActionLoginReturn = string;
+    export enum Entity {}
 
-    export enum Entity {
-        PblUsers = "pbl.PublicService.PblUsers",
-    }
-
-    export enum SanitizedEntity {
-        PblUsers = "PblUsers",
-    }
+    export enum SanitizedEntity {}
 }
 
 export type User = string;

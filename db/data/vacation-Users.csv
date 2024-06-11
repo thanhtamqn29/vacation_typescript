@@ -1,6 +1,4 @@
-ID,username,password,fullName,address,role,department_id
-c692e172-3a63-430d-ba10-0024210fb682,teri.vo,$2a$10$Q5uuNt8NWwT8NE6eZMl6resyFct0TBm1wk0/B/15qq3gmTmKYCSaG,Tam Vo,199 Dong Da,manager,1
-19fd6e7e-93bf-4981-9a43-313249feee0c,royce.pham,$2a$10$Q5uuNt8NWwT8NE6eZMl6resyFct0TBm1wk0/B/15qq3gmTmKYCSaG, Manh Pham,199 Dong Da,staff,1
-b9ec4b80-c425-4410-9bb5-ab0621552c00,zef.tran,$2a$10$Q5uuNt8NWwT8NE6eZMl6resyFct0TBm1wk0/B/15qq3gmTmKYCSaG,Thang Tran,199 Dong Da,staff,1
-4ee2244f-4fcb-4a93-a61a-65faf6025cc4,cary.vo,$2a$10$Q5uuNt8NWwT8NE6eZMl6resyFct0TBm1wk0/B/15qq3gmTmKYCSaG,Ha Vo,199 Dong Da, staff,2
-f943537a-3f08-4cab-8b94-978e6a3b8b44,rebeca.phan,$2a$10$Q5uuNt8NWwT8NE6eZMl6resyFct0TBm1wk0/B/15qq3gmTmKYCSaG,Thu Phan,199 Dong Da, manager,2
+ID,fullName,role,department_id
+p000002,Royce Pham,manager,1
+p000000,Thang Tran,staff,1
+p000001,Tran,staff,2

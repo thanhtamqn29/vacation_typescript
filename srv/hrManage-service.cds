@@ -10,7 +10,7 @@ service HrManagerService @(path: '/manage/manageHr') {
       key r.ID     as request_ID,
           r.status as request_status,
           u.ID     as user_ID,
-          u.username,
+          u.fullName,
           u.role,
           u.department.id ,
           u.department.departmentName,
