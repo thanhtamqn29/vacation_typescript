@@ -2,6 +2,7 @@ import { AfterRead, AfterUpdate, BeforeUpdate, Handler, OnUpdate, Req, Use } fro
 import { mng } from "../../entities";
 import { HandleMiddleware } from "../../middlewares/handler.middleware";
 import { notify } from "../../helpers/notification";
+import { getAllDaysBetween, getDaysBeforeAfterApril, removeHolidays } from "../../helpers/leaveDayCalculation";
 
 @Handler(mng.ManagerService.SanitizedEntity.MngRequests)
 @Use(HandleMiddleware)
@@ -42,7 +43,6 @@ export class RequestManageService {
             query.where({ ID: req.params[0] });
         }
         const requests = await query;
-        console.log(requests);
 
         const data = requests.filter(request => request.user?.department_id === authentication.department && request.status !== "removed");
 
@@ -55,14 +55,99 @@ export class RequestManageService {
         const [data] = await cds.ql
             .SELECT("Requests")
             .columns(col => {
-                col.ID,
-                    col.status,
-                    col.user_ID,
+                col.ID, col.status, col.startDay, col.endDay;
+                col.user_ID,
                     col.user(user => {
                         user.ID, user.fullName;
                     });
             })
             .where({ ID: req.params[0] });
+
+        const currentMonth = new Date().getMonth() + 1;
+        let requestStartDay = new Date(data.startDay + "T00:00:00Z");
+        let requestEndDay = new Date(data.endDay + "T00:00:00Z");
+        if (currentMonth === requestStartDay.getMonth() + 1) {
+            const removeWeekend = getAllDaysBetween(requestStartDay, requestEndDay);
+            const removeHoliday = await removeHolidays(removeWeekend);
+            requestStartDay = new Date(data.startDay + "T00:00:00Z");
+            requestEndDay = new Date(data.endDay + "T00:00:00Z");
+            const user = await cds.ql.SELECT("Users").where({ ID: data.user_ID });
+            const startDayMonth = requestStartDay.getMonth();
+            const endDayMonth = requestEndDay.getMonth();
+
+            if (data.shift) {
+                if (!user.dayOffLastYear) {
+                    await cds.ql
+                        .UPDATE("Users")
+                        .where({ ID: data.user_ID })
+                        .set({
+                            dayOffThisYear: { "-=": 0.5 },
+                        });
+                } else {
+                    if (startDayMonth < 3) {
+                        await cds.ql
+                            .UPDATE("Users")
+                            .set({ dayOffLastYear: { "-=": 0.5 } })
+                            .where({ ID: user.ID });
+                    }
+                    if (startDayMonth > 3) {
+                        await cds.ql
+                            .UPDATE("Users")
+                            .set({ dayOffThisYear: { "-=": 0.5 } })
+                            .where({ ID: user.ID });
+                    }
+                }
+            }
+            if (data.endDay) {
+                if (!user.dayOffLastYear) {
+                    await cds.ql
+                        .UPDATE("Users")
+                        .where({ ID: data.user_ID })
+                        .set({
+                            dayOffThisYear: { "-=": removeHoliday.length },
+                        });
+                } else {
+                    if (startDayMonth < 3 && endDayMonth == 3) {
+                        const { daysBeforeApril, daysAfterApril } = getDaysBeforeAfterApril(removeHoliday);
+                        const newDayOffLastYear = user.dayOffLastYear - daysBeforeApril;
+
+                        await cds.ql
+                            .UPDATE("Users")
+                            .set({ dayOffThisYear: { "-=": daysAfterApril } })
+                            .where({ ID: user.ID });
+
+                        if (newDayOffLastYear >= 0) await cds.ql.UPDATE("Users").set({ dayOffLastYear: newDayOffLastYear }).where({ ID: user.ID });
+
+                        if (newDayOffLastYear < 0)
+                            await cds.ql
+                                .UPDATE("Users")
+                                .set({
+                                    dayOffLastYear: 0,
+                                    dayOffThisYear: { "+=": newDayOffLastYear },
+                                })
+                                .where({ ID: user.ID });
+                    } else {
+                        const newDayOffLastYear = user.dayOffLastYear - removeHoliday.length;
+
+                        if (newDayOffLastYear >= 0)
+                            await cds.ql
+                                .UPDATE("Users")
+                                .set({ dayOffLastYear: { "-=": removeHoliday.length } })
+                                .where({ ID: user.ID });
+
+                        if (newDayOffLastYear < 0)
+                            await cds.ql
+                                .UPDATE("Users")
+                                .set({
+                                    dayOffLastYear: 0,
+                                    dayOffThisYear: { "+=": newDayOffLastYear },
+                                })
+                                .where({ ID: user.ID });
+                    }
+                }
+            }
+            await cds.ql.UPDATE("Request").set({ status: "approved" }).where({ user_ID: req.params[0] });
+        }
 
         await notify({ data, authentication }, data.status);
         req.reply({
